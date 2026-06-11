@@ -34,7 +34,16 @@ http://git-badge-stats.vercel.app/api?username=odutra-dev
 > [!WARNING]
 > By default, the stats card only shows statistics like stars, commits, and pull requests from public repositories.
 
+### Themes
+
+You can change the theme of the stats card using the `?theme=` query parameter. The available themes are:
+
+```
+http://git-badge-stats.vercel.app/api?username=odutra-dev&theme=dracula
+```
+
+You can also find the list of available themes [here](https://github.com/odutra-dev/GitBadgeStats/blob/master/themes.py).
 
 # Credits:
 
-Credits for [Anurag Hazra](https://github.com/anuraghazra/github-readme-stats)
+Credits for [Anurag Hazra](https://github.com/anuraghazra) by me inspired by his work. Where your repository is public, repository [github.com/anuraghazra/github-readme-stats](https://github.com/anuraghazra/github-readme-stats) is the original source.
