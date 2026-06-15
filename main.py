@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Response
 from dotenv import load_dotenv
 
-from github import fetch_github_stats
-from render import generate_svg
+from src.github import fetch_github_stats
+from src.render import generate_svg
 
 load_dotenv()
 
