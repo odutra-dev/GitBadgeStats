@@ -1,5 +1,5 @@
-from themes import themes
-from icons import icons
+from src.themes import themes
+from src.icons import icons
 
 
 def generate_svg(stats: dict, theme_name: str = "default") -> str:
