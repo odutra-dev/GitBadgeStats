@@ -49,7 +49,7 @@ async def fetch_github_stats(username: str) -> dict:
 
     data = response.json()
     if "errors" in data or not data.get("data") or not data["data"].get("user"):
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        raise HTTPException(status_code=404, detail="User not found")
 
     user_data = data["data"]["user"]
 
