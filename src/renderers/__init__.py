@@ -6,6 +6,10 @@ from src.renderers.streak_card import (
     generate_streak_svg,
     render_flame_svg,
 )
+from src.renderers.languages_card import (
+    LanguagesCardRenderer,
+    generate_languages_svg,
+)
 
 __all__ = [
     "StatsCardRenderer",
@@ -13,4 +17,6 @@ __all__ = [
     "StreakCardRenderer",
     "generate_streak_svg",
     "render_flame_svg",
+    "LanguagesCardRenderer",
+    "generate_languages_svg",
 ]
