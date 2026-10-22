@@ -2,10 +2,10 @@ import xml.etree.ElementTree as ET
 from datetime import date
 import pytest
 
-from src.streak import StreakCalculator, calculate_streak_from_days
-from src.render_streak import StreakCardRenderer, render_flame_svg, generate_streak_svg
-from src.utils import parse_background, escape_text, format_color
-from src.cache import SimpleTTLCache
+from src.domain.streak import StreakCalculator, calculate_streak_from_days
+from src.renderers.streak_card import StreakCardRenderer, render_flame_svg, generate_streak_svg
+from src.common.utils import parse_background, escape_text, format_color
+from src.services.cache import SimpleTTLCache
 
 
 def test_streak_committed_today():

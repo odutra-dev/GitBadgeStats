@@ -2,7 +2,7 @@
 
 import pytest
 from fastapi import HTTPException
-from src.github_client import GitHubGraphQLClient
+from src.services.github_client import GitHubGraphQLClient
 
 
 def test_client_missing_token_raises_http_500(monkeypatch):

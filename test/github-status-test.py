@@ -9,7 +9,7 @@ if not os.getenv("GITHUB_TOKEN"):
     os.environ["GITHUB_TOKEN"] = "test-token-value"
 
 from main import app
-from src.cache import cache
+from src.services.cache import cache
 
 client = TestClient(app)
 

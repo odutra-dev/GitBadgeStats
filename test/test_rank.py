@@ -1,6 +1,6 @@
 """Unit tests for GitHub dynamic rank calculation module."""
 
-from src.rank import calculate_rank, exponential_cdf, log_normal_cdf
+from src.domain.rank import calculate_rank, exponential_cdf, log_normal_cdf
 
 
 def test_exponential_cdf():

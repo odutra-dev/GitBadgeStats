@@ -1,7 +1,7 @@
 """Unit tests for cache module adhering to TDD."""
 
 import time
-from src.cache import SimpleTTLCache, CacheBackend
+from src.services.cache import SimpleTTLCache, CacheBackend
 
 
 def test_cache_implements_protocol():
