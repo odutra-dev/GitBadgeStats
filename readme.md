@@ -1,6 +1,6 @@
 <div align="center">
   <h1 style="font-size: 28px; margin: 10px 0;">Git Badge Stats</h1>
-  <p>Dynamically generated GitHub stats badges and Duolingo-style Streak Cards for your profile READMEs!</p>
+  <p>Dynamically generated GitHub stats badges, Duolingo-style Streak Cards, and Top Languages for your profile READMEs!</p>
 </div>
 
 <p align="center">
@@ -30,16 +30,22 @@ Inspired by Duolingo streaks, this card monitors your daily GitHub commit consis
 - **7-Day Weekly Tracker:** Displays the last 7 days with mini flames lit for active days and commit counts below.
 - **Compact Mode:** Hide the weekly tracker with `hide_days=true` for a sleek, minimal card.
 
-### Quick Usage
+### Preview
+
+<p align="center">
+  <img src="https://git-badge-stats.vercel.app/api/streak?username=odutra-dev&theme=dracula" alt="GitHub Streak Preview" />
+</p>
+
+### Usage
 
 ```markdown
-![GitHub Streak](https://git-badge-stats.vercel.app/api/streak?username=YOUR_USERNAME&theme=dracula)
+![GitHub Streak](https://git-badge-stats.vercel.app/api/streak?username=odutra-dev&theme=dracula)
 ```
 
 Or in HTML:
 
 ```html
-<img src="https://git-badge-stats.vercel.app/api/streak?username=YOUR_USERNAME&theme=dracula" alt="GitHub Streak" />
+<img src="https://git-badge-stats.vercel.app/api/streak?username=odutra-dev&theme=dracula" alt="GitHub Streak" />
 ```
 
 ### Streak Card Query Parameters
@@ -63,14 +69,22 @@ Or in HTML:
 
 A classic GitHub statistics card featuring dynamic rank computation (S, A+, A, A-, B+, B, B-, C+, C):
 
+### Preview
+
+<p align="center">
+  <img src="https://git-badge-stats.vercel.app/api/stats?username=odutra-dev&theme=tokyonight" alt="GitHub Stats Preview" />
+</p>
+
+### Usage
+
 ```markdown
-![GitHub Stats](https://git-badge-stats.vercel.app/api?username=YOUR_USERNAME&theme=tokyonight)
+![GitHub Stats](https://git-badge-stats.vercel.app/api/stats?username=odutra-dev&theme=tokyonight)
 ```
 
-Or using the explicit route:
+Or using the standard `/api` route:
 
 ```markdown
-![GitHub Stats](https://git-badge-stats.vercel.app/api/stats?username=YOUR_USERNAME&theme=tokyonight)
+![GitHub Stats](https://git-badge-stats.vercel.app/api?username=odutra-dev&theme=tokyonight)
 ```
 
 ### Stats Card Query Parameters
@@ -96,16 +110,22 @@ Display your top 5 most frequently used programming languages across your GitHub
 - **Top 5 Breakdown:** 2-column clean layout displaying language names, colored badges, and exact percentages.
 - **Custom Filters:** Exclude specific languages (e.g. `hide=html,css`) or specific repositories (`exclude_repo=legacy-project`).
 
-### Quick Usage
+### Preview
+
+<p align="center">
+  <img src="https://git-badge-stats.vercel.app/api/top-langs?username=odutra-dev&theme=tokyonight" alt="Top Languages Preview" />
+</p>
+
+### Usage
 
 ```markdown
-![Top Languages](https://git-badge-stats.vercel.app/api/top-langs?username=YOUR_USERNAME&theme=tokyonight)
+![Top Languages](https://git-badge-stats.vercel.app/api/top-langs?username=odutra-dev&theme=tokyonight)
 ```
 
 Or using the `/api/languages` route:
 
 ```markdown
-![Top Languages](https://git-badge-stats.vercel.app/api/languages?username=YOUR_USERNAME&theme=tokyonight)
+![Top Languages](https://git-badge-stats.vercel.app/api/languages?username=odutra-dev&theme=tokyonight)
 ```
 
 ### Top Languages Query Parameters
