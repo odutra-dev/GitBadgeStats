@@ -6,10 +6,10 @@ the profile statistics badge SVG with dynamic rank gauge, icons, and theme style
 
 import math
 from typing import Optional
-from src.themes import themes
-from src.icons import icons
-from src.rank import calculate_rank
-from src.utils import format_color, parse_background, escape_text
+from src.common.themes import themes
+from src.common.icons import icons
+from src.domain.rank import calculate_rank
+from src.common.utils import format_color, parse_background, escape_text
 
 
 class StatsCardRenderer:

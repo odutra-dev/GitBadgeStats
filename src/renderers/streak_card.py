@@ -5,9 +5,9 @@ the streak badge SVG with proper geometric spacing, crisp fonts, and theme styli
 """
 
 from typing import Optional
-from src.themes import themes
-from src.icons import icons, DUO_FLAME_OUTER_PATH, DUO_FLAME_INNER_PATH
-from src.utils import format_color, parse_background, escape_text
+from src.common.themes import themes
+from src.common.icons import icons, DUO_FLAME_OUTER_PATH, DUO_FLAME_INNER_PATH
+from src.common.utils import format_color, parse_background, escape_text
 
 
 class StreakCardRenderer:

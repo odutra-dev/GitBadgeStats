@@ -8,13 +8,15 @@ from datetime import datetime, timezone
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from src.cache import cache, CacheBackend
-from src.github_client import GitHubGraphQLClient, default_github_client
-from src.streak import StreakCalculator, calculate_streak_from_days
+from src.services.cache import cache, CacheBackend
+from src.services.github_client import GitHubGraphQLClient, default_github_client
+from src.domain.streak import StreakCalculator, calculate_streak_from_days
 
-# Re-export helper functions for backwards compatibility
+# Helper functions
 def get_headers() -> dict:
     return default_github_client.headers
+
+
 get_stats_graphql_query = GitHubGraphQLClient.get_stats_graphql_query
 get_streak_graphql_query = GitHubGraphQLClient.get_streak_graphql_query
 

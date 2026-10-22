@@ -2,9 +2,9 @@ from typing import Optional
 from fastapi import FastAPI, Response, Query
 from dotenv import load_dotenv
 
-from src.github import fetch_github_stats, fetch_github_streak
-from src.render import generate_svg
-from src.render_streak import generate_streak_svg
+from src.services.github_service import fetch_github_stats, fetch_github_streak
+from src.renderers.stats_card import generate_svg
+from src.renderers.streak_card import generate_streak_svg
 
 load_dotenv()
 
