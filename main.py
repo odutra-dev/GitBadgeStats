@@ -1,7 +1,6 @@
 from typing import Optional
 from fastapi import FastAPI, Response, Query
 from dotenv import load_dotenv
-
 from src.services.github_service import (
     fetch_github_stats,
     fetch_github_streak,
