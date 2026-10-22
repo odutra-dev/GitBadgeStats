@@ -1,5 +1,26 @@
+"""Caching interfaces and implementations.
+
+Adheres to Interface Segregation Principle (ISP) and Dependency Inversion (DIP).
+"""
+
 import time
-from typing import Any, Optional
+from typing import Any, Optional, Protocol
+
+
+class CacheBackend(Protocol):
+    """Abstract cache backend protocol for Dependency Inversion."""
+
+    def get(self, key: str) -> Optional[Any]:
+        ...
+
+    def set(self, key: str, value: Any, ttl_seconds: Optional[int] = None) -> None:
+        ...
+
+    def delete(self, key: str) -> None:
+        ...
+
+    def clear(self) -> None:
+        ...
 
 
 class SimpleTTLCache:
@@ -33,5 +54,5 @@ class SimpleTTLCache:
         return sum(1 for exp, _ in self._cache.values() if exp > now)
 
 
-# Global cache instance with a default TTL of 10 minutes (600 seconds)
-cache = SimpleTTLCache(default_ttl_seconds=600)
+# Global default cache instance with 10-minute TTL
+cache: CacheBackend = SimpleTTLCache(default_ttl_seconds=600)
