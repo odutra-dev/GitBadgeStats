@@ -96,7 +96,7 @@ Git Badge Stats comes with over 70 built-in themes out of the box, including:
 - `catppuccin_mocha`, `catppuccin_latte`, `nord`, `cobalt`, `synthwave`, `highcontrast`
 - `ambient_gradient`, `sunset`, `ocean_dark`, `github_dark`, etc.
 
-Explore the full list of themes in [`src/themes.py`](src/themes.py).
+Explore the full list of themes in [`src/common/themes.py`](src/common/themes.py).
 
 ---
 
