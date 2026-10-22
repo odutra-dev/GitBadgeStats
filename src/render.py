@@ -1,44 +1,38 @@
 import math
+from typing import Optional
 from src.themes import themes
 from src.icons import icons
-from src.rank import calculate_rank  # Importando a nova regra de negócio
+from src.rank import calculate_rank
+from src.utils import format_color, parse_background, escape_text
 
 
-def generate_svg(stats: dict, theme_name: str = "default") -> str:
-    """Gera o SVG baseado nos dados, aplicando o tema, adicionando os ícones e o Rank Dinâmico."""
+def generate_svg(
+    stats: dict,
+    theme_name: str = "default",
+    hide_rank: bool = False,
+    title_color_override: Optional[str] = None,
+    text_color_override: Optional[str] = None,
+    icon_color_override: Optional[str] = None,
+    bg_color_override: Optional[str] = None,
+    border_color_override: Optional[str] = None,
+) -> str:
+    """Generate SVG stats card based on user stats, theme, icons, and dynamic rank."""
     theme = themes.get(theme_name, themes["default"])
 
-    def format_color(color_val):
-        if not color_val:
-            return ""
-        color_str = str(color_val).strip()
-        if "," in color_str or color_str.startswith("#"):
-            return color_str
-        return f"#{color_str}"
+    title_color = format_color(title_color_override or theme.get("title_color", "2f80ed"))
+    text_color = format_color(text_color_override or theme.get("text_color", "333333"))
+    icon_color = format_color(icon_color_override or theme.get("icon_color", "4c71f2"))
 
-    title_color = format_color(theme.get("title_color", "2f80ed"))
-    text_color = format_color(theme.get("text_color", "333333"))
-    icon_color = format_color(theme.get("icon_color", "4c71f2"))
-    bg_color = format_color(theme.get("bg_color", "fffefe"))
+    raw_bg = bg_color_override or theme.get("bg_color", "fffefe")
+    bg_defs, bg_fill = parse_background(raw_bg)
 
-    border_color = theme.get("border_color")
-    border_color = format_color(border_color) if border_color else text_color
+    raw_border = border_color_override or theme.get("border_color")
+    border_color = format_color(raw_border) if raw_border else text_color
 
-    # --- CÁLCULO DO RANK ---
-    rank_letter, global_percentile = calculate_rank(stats)
+    # Escaped display name safe against XML/SVG injections
+    display_name = escape_text(stats.get("name", "User"))
 
-    # Proximidade do topo: se o cara é Top 1%, a proximidade é 99%
-    progress_percentage = 100 - global_percentile
-
-    # Configuração do Círculo SVG (Raio = 30)
-    circle_radius = 30
-    circumference = 2 * math.pi * circle_radius  # ~188.495
-    # Dashoffset determina a parte "vazia". 0 = Círculo Cheio, Círculo Completo = Vazio
-    stroke_dashoffset = circumference - (
-        progress_percentage / 100
-    ) * circumference
-
-    # Função utilitária para renderizar o ícone com a cor do tema na posição correta
+    # Helper to render icons with theme color
     def render_icon(icon_name: str, y_pos: int) -> str:
         path = icons.get(icon_name, "")
         return f"""
@@ -47,22 +41,48 @@ def generate_svg(stats: dict, theme_name: str = "default") -> str:
         </svg>
         """
 
-    return f"""<svg width="400" height="230" viewBox="0 0 400 230" xmlns="http://www.w3.org/2000/svg">
+    # Optional dynamic rank component
+    rank_svg = ""
+    card_width = 400
+    if not hide_rank:
+        rank_letter, global_percentile = calculate_rank(stats)
+        progress_percentage = 100 - global_percentile
+        circle_radius = 30
+        circumference = 2 * math.pi * circle_radius
+        stroke_dashoffset = circumference - (progress_percentage / 100) * circumference
+
+        rank_svg = f"""
+        <g transform="translate(0, 0)">
+            <text x="320" y="75" class="rank-title">GitHub Rank</text>
+            <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-bg" />
+            <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-progress"
+                    stroke-dasharray="{circumference}"
+                    stroke-dashoffset="{stroke_dashoffset}" />
+            <text x="320" y="125" class="rank-letter">{escape_text(rank_letter)}</text>
+        </g>
+        """
+    else:
+        card_width = 330
+
+    return f"""<svg width="{card_width}" height="230" viewBox="0 0 {card_width} 230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            {bg_defs}
+        </defs>
         <style>
             .header {{ font: bold 18px 'Segoe UI', Ubuntu, Sans-Serif; fill: {title_color}; }}
             .stat {{ font: 600 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: {text_color}; }}
             .bold {{ font-weight: bold; }}
             
-            /* Classes para o componente de Rank */
+            /* Dynamic Rank component classes */
             .rank-title {{ font: bold 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: {title_color}; text-anchor: middle; }}
             .rank-letter {{ font: bold 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: {text_color}; text-anchor: middle; dominant-baseline: central; }}
             .rank-circle-bg {{ fill: none; stroke: {text_color}; stroke-opacity: 0.1; stroke-width: 4.5; }}
             .rank-circle-progress {{ fill: none; stroke: {icon_color}; stroke-width: 4.5; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 320px 125px; }}
         </style>
         
-        <rect width="399" height="229" x="0.5" y="0.5" rx="4.5" fill="{bg_color}" stroke="{border_color}"/>
+        <rect width="{card_width - 1}" height="229" x="0.5" y="0.5" rx="4.5" fill="{bg_fill}" stroke="{border_color}"/>
         
-        <text x="25" y="35" class="header">{stats.get('name', 'User')}'s GitHub Stats</text>
+        <text x="25" y="35" class="header">{display_name}'s GitHub Stats</text>
         
         {render_icon("commits", 61)}
         <text x="50" y="75" class="stat">Total Commits: <tspan class="bold" x="190">{stats.get('total_commits', 0)}</tspan></text>
@@ -79,15 +99,5 @@ def generate_svg(stats: dict, theme_name: str = "default") -> str:
         {render_icon("contribs", 181)}
         <text x="50" y="195" class="stat">Contributed to: <tspan class="bold" x="190">{stats.get('contributed_to', 0)}</tspan></text>
         
-        <g transform="translate(0, 0)">
-            <text x="320" y="75" class="rank-title">GitHub Rank</text>
-            
-            <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-bg" />
-            
-            <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-progress"
-                    stroke-dasharray="{circumference}"
-                    stroke-dashoffset="{stroke_dashoffset}" />
-            
-            <text x="320" y="125" class="rank-letter">{rank_letter}</text>
-        </g>
+        {rank_svg}
     </svg>"""
