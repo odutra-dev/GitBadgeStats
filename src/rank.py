@@ -2,31 +2,30 @@ import math
 
 
 def exponential_cdf(x: float) -> float:
-    """Calcula o CDF exponencial baseado na lógica do repositório."""
+    """Calculate exponential CDF matching the official algorithm."""
     return 1 - (2**-x)
 
 
 def log_normal_cdf(x: float) -> float:
-    """Calcula a aproximação do CDF log-normal."""
+    """Calculate log-normal CDF approximation."""
     return x / (1 + x) if x >= 0 else 0
 
 
 def calculate_rank(stats: dict) -> tuple[str, float]:
-    """Calcula o Rank (S, A+, etc.) e o percentil global traduzido do JS oficial.
+    """Calculate Rank level (S, A+, etc.) and global percentile matching github-readme-stats.
 
-    Retorna uma tupla: (level, percentile)
+    Returns a tuple: (level, percentile)
     """
-    # Recuperando parâmetros com fallback para falso/zero se não existirem
+    # Retrieve stats parameters with fallbacks
     all_commits = stats.get("all_commits", False)
     commits = stats.get("total_commits", 0)
     prs = stats.get("total_prs", 0)
     issues = stats.get("total_issues", 0)
-    # Se 'reviews' não existir, usa 'contributed_to' como plano B
     reviews = stats.get("reviews", stats.get("contributed_to", 0))
     stars = stats.get("stars", 0)
     followers = stats.get("followers", 0)
 
-    # Medianas e Pesos oficiais do arquivo JS
+    # Medians and weights
     commits_median = 1000 if all_commits else 250
     commits_weight = 2
 
@@ -57,7 +56,7 @@ def calculate_rank(stats: dict) -> tuple[str, float]:
     thresholds = [1.0, 12.5, 25.0, 37.5, 50.0, 62.5, 75.0, 87.5, 100.0]
     levels = ["S", "A+", "A", "A-", "B+", "B", "B-", "C+", "C"]
 
-    # Cálculo do Rank (Exatamente a fórmula matemática do JS)
+    # Rank calculation
     weighted_sum = (
         commits_weight * exponential_cdf(commits / commits_median)
         + prs_weight * exponential_cdf(prs / prs_median)
@@ -70,8 +69,8 @@ def calculate_rank(stats: dict) -> tuple[str, float]:
     rank_val = 1 - (weighted_sum / total_weight)
     percentile = rank_val * 100
 
-    # Encontra o nível correspondente (Equivalente ao findIndex do JS)
-    level = "C"  # Fallback caso passe de 100 por alguma anomalia externa
+    # Match corresponding tier level
+    level = "C"
     for t, lvl in zip(thresholds, levels):
         if percentile <= t:
             level = lvl
