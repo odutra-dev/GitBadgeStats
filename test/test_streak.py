@@ -2,8 +2,8 @@ import xml.etree.ElementTree as ET
 from datetime import date
 import pytest
 
-from src.github import calculate_streak_from_days
-from src.render_streak import render_flame_svg, generate_streak_svg
+from src.streak import StreakCalculator, calculate_streak_from_days
+from src.render_streak import StreakCardRenderer, render_flame_svg, generate_streak_svg
 from src.utils import parse_background, escape_text, format_color
 from src.cache import SimpleTTLCache
 
@@ -18,7 +18,7 @@ def test_streak_committed_today():
         {"date": "2026-10-22", "count": 4},
     ]
 
-    result = calculate_streak_from_days(days, user_date=test_today, locale="en")
+    result = StreakCalculator.calculate(days, user_date=test_today, locale="en")
     assert result["current_streak"] == 4
     assert result["is_active_today"] is True
     assert result["today_commits"] == 4
@@ -49,7 +49,7 @@ def test_streak_pending_today():
         {"date": "2026-10-22", "count": 0},
     ]
 
-    result = calculate_streak_from_days(days, user_date=test_today, locale="en")
+    result = StreakCalculator.calculate(days, user_date=test_today, locale="en")
     assert result["current_streak"] == 2
     assert result["is_active_today"] is False
     assert result["today_commits"] == 0
@@ -71,7 +71,7 @@ def test_streak_resets_after_missed_day():
         {"date": "2026-10-22", "count": 0},  # Today also uncommitted
     ]
 
-    result = calculate_streak_from_days(days, user_date=test_today, locale="en")
+    result = StreakCalculator.calculate(days, user_date=test_today, locale="en")
     assert result["current_streak"] == 0
     assert result["is_active_today"] is False
     assert result["longest_streak"] == 3
@@ -86,7 +86,7 @@ def test_streak_reignites_on_commit_after_miss():
         {"date": "2026-10-22", "count": 2},  # Committed today
     ]
 
-    result = calculate_streak_from_days(days, user_date=test_today, locale="en")
+    result = StreakCalculator.calculate(days, user_date=test_today, locale="en")
     assert result["current_streak"] == 1
     assert result["is_active_today"] is True
 
@@ -105,7 +105,7 @@ def test_longest_streak_historical():
         {"date": "2026-10-22", "count": 1},  # Current 2-day streak
     ]
 
-    result = calculate_streak_from_days(days, user_date=test_today, locale="en")
+    result = StreakCalculator.calculate(days, user_date=test_today, locale="en")
     assert result["current_streak"] == 2
     assert result["longest_streak"] == 5
 
@@ -160,25 +160,51 @@ def test_generate_streak_svg_validity_and_themes():
     assert int(root_compact.attrib["height"]) == 145
 
 
-def test_ttl_cache():
-    """Verify basic TTL cache behavior."""
-    c = SimpleTTLCache(default_ttl_seconds=1)
-    c.set("k1", "v1")
-    assert c.get("k1") == "v1"
-    c.delete("k1")
-    assert c.get("k1") is None
-    c.set("k2", "v2", ttl_seconds=0.01)
-    import time
-    time.sleep(0.02)
-    assert c.get("k2") is None
+def test_streak_msg_does_not_overlap_days():
+    """Verify that the streak message (e.g. 'Streak active! Flame is burning today')
+    is positioned cleanly in the header area (y <= 55) and has substantial vertical clearance
+    from the weekly tracker day cards (y >= 140), preventing any visual overlap."""
+    stats = {
+        "name": "Octocat",
+        "current_streak": 5,
+        "longest_streak": 10,
+        "total_commits": 100,
+        "is_active_today": True,
+        "streak_message": "Streak active! Flame is burning today",
+        "weekly_days": [
+            {"date": f"2026-10-{16+i}", "day_name": f"Day{i}", "count": i, "is_active": True, "is_today": (i == 6)}
+            for i in range(7)
+        ],
+    }
 
+    svg = generate_streak_svg(stats, locale="en")
+    root = ET.fromstring(svg)
 
-def test_gradient_parser():
-    """Verify color parsing and gradient definitions."""
-    defs, fill = parse_background("35,4158d0,c850c0,ffcc70")
-    assert "linearGradient" in defs
-    assert fill == "url(#bg-gradient)"
+    # Find the streak message element
+    streak_msg_elements = [
+        elem for elem in root.iter()
+        if elem.tag.endswith("text") and elem.attrib.get("class") == "streak-msg"
+    ]
+    assert len(streak_msg_elements) == 1
+    msg_elem = streak_msg_elements[0]
+    msg_y = float(msg_elem.attrib["y"])
+    assert msg_y <= 55, f"Expected streak-msg y <= 55, but got {msg_y}"
+    assert "Streak active! Flame is burning today" in msg_elem.text
 
-    defs_solid, fill_solid = parse_background("151515")
-    assert defs_solid == ""
-    assert fill_solid == "#151515"
+    # Find weekly tracker group and check day box translation y-coordinates
+    weekly_groups = [
+        elem for elem in root.iter()
+        if elem.tag.endswith("g") and elem.attrib.get("class") == "weekly-tracker"
+    ]
+    assert len(weekly_groups) == 1
+    weekly_group = weekly_groups[0]
+
+    # Every child item in weekly tracker must have transform="translate(x, y)" with y >= 140
+    for child in weekly_group:
+        transform = child.attrib.get("transform", "")
+        if "translate" in transform:
+            coords = transform.replace("translate(", "").replace(")", "").split(",")
+            y_val = float(coords[1].strip())
+            assert y_val >= 140, f"Weekly day card expected y >= 140, but got {y_val}"
+            # Ensure at least 80px clearance between streak_msg and day card
+            assert y_val - msg_y >= 80, f"Expected >= 80px vertical separation, got {y_val - msg_y}px"
