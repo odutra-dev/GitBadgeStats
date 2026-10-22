@@ -60,6 +60,32 @@ MOCK_USER_STREAK = {
     }
 }
 
+MOCK_USER_LANGUAGES = {
+    "data": {
+        "user": {
+            "name": "The Octocat",
+            "login": "octocat",
+            "repositories": {
+                "nodes": [
+                    {
+                        "name": "Hello-World",
+                        "isFork": False,
+                        "languages": {
+                            "edges": [
+                                {"size": 3000, "node": {"name": "Python", "color": "#3572A5"}},
+                                {"size": 1500, "node": {"name": "JavaScript", "color": "#f1e05a"}},
+                                {"size": 800, "node": {"name": "HTML", "color": "#e34c26"}},
+                                {"size": 500, "node": {"name": "CSS", "color": "#563d7c"}},
+                                {"size": 200, "node": {"name": "Shell", "color": "#89e051"}},
+                            ]
+                        },
+                    }
+                ]
+            },
+        }
+    }
+}
+
 MOCK_USER_NOT_FOUND = {
     "data": {"user": None},
     "errors": [{"message": "Could not resolve to a User with the login of 'nonexistentuser1234567890'."}],
@@ -75,6 +101,8 @@ def mock_github_post(url, *args, **kwargs):
         return httpx.Response(200, json=MOCK_USER_NOT_FOUND)
 
     query = req_json.get("query", "")
+    if "userTopLanguages" in query:
+        return httpx.Response(200, json=MOCK_USER_LANGUAGES)
     if "userStreak" in query:
         return httpx.Response(200, json=MOCK_USER_STREAK)
     return httpx.Response(200, json=MOCK_USER_STATS)
@@ -145,6 +173,34 @@ def test_get_streak_not_found():
 
 def test_get_streak_no_username():
     response = client.get("/api/streak")
+    assert response.status_code == 422
+
+
+def test_get_top_languages_success():
+    response = client.get("/api/top-langs?username=octocat&theme=dracula")
+    assert response.status_code == 200
+    assert "image/svg+xml" in response.headers["Content-Type"]
+    assert "<svg" in response.text
+    assert "Most Used Languages" in response.text
+    assert "Python" in response.text
+    assert "JavaScript" in response.text
+
+
+def test_get_top_languages_hide_param():
+    response = client.get("/api/top-langs?username=octocat&hide=html,css")
+    assert response.status_code == 200
+    assert "Python" in response.text
+    assert "HTML" not in response.text
+
+
+def test_get_top_languages_not_found():
+    response = client.get("/api/top-langs?username=nonexistentuser1234567890")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "User not found"}
+
+
+def test_get_top_languages_no_username():
+    response = client.get("/api/top-langs")
     assert response.status_code == 422
 
 
