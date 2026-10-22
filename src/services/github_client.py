@@ -78,6 +78,33 @@ class GitHubGraphQLClient:
         }
         """
 
+    @staticmethod
+    def get_top_languages_graphql_query() -> str:
+        """GraphQL query for fetching user repositories and their language usage."""
+        return """
+        query userTopLanguages($login: String!) {
+          user(login: $login) {
+            name
+            login
+            repositories(first: 100, ownerAffiliations: OWNER, isFork: false, orderBy: {field: STARGAZERS, direction: DESC}) {
+              nodes {
+                name
+                isFork
+                languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                  edges {
+                    size
+                    node {
+                      name
+                      color
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        """
+
     async def execute_query(self, query: str, variables: dict) -> dict:
         """Execute a GraphQL query and handle common GitHub error status codes."""
         async with httpx.AsyncClient(timeout=self._timeout) as client:
