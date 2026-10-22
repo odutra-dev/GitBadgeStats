@@ -88,6 +88,42 @@ Or using the explicit route:
 
 ---
 
+## 3. 🌐 Top Languages Card
+
+Display your top 5 most frequently used programming languages across your GitHub repositories:
+
+- **Proportional Progress Bar:** Multi-segmented progress bar filled with official language colors.
+- **Top 5 Breakdown:** 2-column clean layout displaying language names, colored badges, and exact percentages.
+- **Custom Filters:** Exclude specific languages (e.g. `hide=html,css`) or specific repositories (`exclude_repo=legacy-project`).
+
+### Quick Usage
+
+```markdown
+![Top Languages](https://git-badge-stats.vercel.app/api/top-langs?username=YOUR_USERNAME&theme=tokyonight)
+```
+
+Or using the `/api/languages` route:
+
+```markdown
+![Top Languages](https://git-badge-stats.vercel.app/api/languages?username=YOUR_USERNAME&theme=tokyonight)
+```
+
+### Top Languages Query Parameters
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `username` | `string` | **Required** | GitHub username |
+| `theme` | `string` | `default` | Visual theme name |
+| `hide` | `string` | - | Comma-separated languages to exclude (e.g., `html,css,jupyter notebook`) |
+| `exclude_repo` | `string` | - | Comma-separated repository names to ignore |
+| `card_title` | `string` | `Most Used Languages` | Custom title for the card |
+| `title_color` | `string` | - | Custom hex color for card title |
+| `text_color` | `string` | - | Custom hex color for language labels and percentages |
+| `bg_color` | `string` | - | Custom hex color or gradient for background |
+| `border_color`| `string` | - | Custom hex color for card border |
+
+---
+
 ## 🎨 Available Themes
 
 Git Badge Stats comes with over 70 built-in themes out of the box, including:
