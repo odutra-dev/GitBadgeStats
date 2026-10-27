@@ -113,6 +113,18 @@ async def health_check():
     return {"status": "ok"}
 
 
+@app.get("/api/themes")
+async def get_themes():
+    """List all available theme names sorted alphabetically."""
+    return {"themes": sorted(themes.keys())}
+
+
+@app.get("/api/locales")
+async def get_locales():
+    """List all supported locale codes."""
+    return {"locales": list(SUPPORTED_LOCALES)}
+
+
 @app.get("/api")
 @app.get("/api/stats")
 async def get_repo_stats(
