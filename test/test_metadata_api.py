@@ -36,6 +36,9 @@ def test_serve_home():
     assert response.status_code == 200
     assert "text/html" in response.headers.get("content-type", "")
     assert "Git Badge Stats" in response.text
+    assert "Profile Badge Builder" in response.text
+    assert "Query Parameters" in response.text
+    assert "Embed in README" in response.text
     assert "card-tab-btn" in response.text
     assert "input-username" in response.text
 

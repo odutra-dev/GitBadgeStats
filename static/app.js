@@ -1,5 +1,5 @@
 /**
- * GitBadgeStats - Interactive Badge Generator & Preview
+ * GitBadgeStats - Interactive Badge Generator & Preview (Shields.io Style)
  */
 
 (function () {
@@ -17,6 +17,11 @@
     streak: 'GitHub Streak',
     languages: 'Top Languages',
   };
+  const CARD_ENDPOINTS = {
+    stats: 'GET /api/stats',
+    streak: 'GET /api/streak',
+    languages: 'GET /api/top-langs',
+  };
 
   // State
   let activeCard = 'stats';
@@ -27,6 +32,9 @@
   const cardTabBtns = document.querySelectorAll('.card-tab-btn');
   const formatTabBtns = document.querySelectorAll('.format-tab-btn');
   const toggleProductionUrl = document.getElementById('toggle-production-url');
+
+  const activeBadgeTitle = document.getElementById('active-badge-title');
+  const activeBadgeEndpoint = document.getElementById('active-badge-endpoint');
 
   // Preview elements
   const previewWrapper = document.getElementById('preview-wrapper');
@@ -85,7 +93,7 @@
   const pickerBorderColor = document.getElementById('picker-border-color');
 
   /**
-   * Initialize themes from API
+   * Load available themes from API
    */
   async function loadThemes() {
     try {
@@ -101,7 +109,6 @@
       console.warn('Could not load themes from /api/themes, using fallback list', e);
     }
 
-    // Fallback popular themes
     const fallbackThemes = [
       'default', 'dark', 'dracula', 'tokyonight', 'radical',
       'onedark', 'gruvbox', 'catppuccin_mocha', 'catppuccin_latte',
@@ -125,7 +132,7 @@
   }
 
   /**
-   * Helper to clean hex input (removes leading # and whitespace)
+   * Clean hex string
    */
   function cleanHex(value) {
     if (!value) return '';
@@ -133,9 +140,7 @@
   }
 
   /**
-   * Get current base URLs:
-   * - localOrigin: always window.location.origin (for live preview)
-   * - exportOrigin: depends on toggle (production url vs window.location.origin)
+   * Get base URLs
    */
   function getBaseUrls() {
     const isFile = window.location.protocol === 'file:';
@@ -216,7 +221,7 @@
   }
 
   /**
-   * Generate badge URLs (preview & export)
+   * Generate badge URLs
    */
   function generateUrls() {
     const { localOrigin, exportOrigin } = getBaseUrls();
@@ -226,7 +231,7 @@
     // Export query string (if username empty, show placeholder)
     let exportQs = params.toString();
     if (!inputUsername.value.trim()) {
-      const dummyParams = buildQueryParams('seu-usuario');
+      const dummyParams = buildQueryParams('your-username');
       exportQs = dummyParams.toString();
     }
 
@@ -237,7 +242,7 @@
   }
 
   /**
-   * Render code snippets in selected format
+   * Render code snippet
    */
   function renderCodeSnippet() {
     const { exportUrl } = generateUrls();
@@ -256,7 +261,7 @@
   }
 
   /**
-   * Update the badge preview image
+   * Update badge preview image
    */
   function updatePreview() {
     const username = inputUsername.value.trim();
@@ -266,12 +271,12 @@
       previewImg.classList.add('hidden');
       previewLoading.classList.add('hidden');
       linkOpenRaw.href = '#';
-      linkOpenRaw.classList.add('pointer-events-none', 'opacity-50');
+      linkOpenRaw.classList.add('pointer-events-none', 'opacity-40');
       return;
     }
 
     usernameError.classList.add('hidden');
-    linkOpenRaw.classList.remove('pointer-events-none', 'opacity-50');
+    linkOpenRaw.classList.remove('pointer-events-none', 'opacity-40');
 
     const { previewUrl } = generateUrls();
     linkOpenRaw.href = previewUrl;
@@ -279,7 +284,6 @@
     // Show loading spinner
     previewLoading.classList.remove('hidden');
 
-    // Create a new image to load seamlessly
     const tempImg = new Image();
     tempImg.onload = function () {
       previewImg.src = previewUrl;
@@ -288,7 +292,6 @@
       previewLoading.classList.add('hidden');
     };
     tempImg.onerror = function () {
-      // Even on error, SVG error card is returned by the API
       previewImg.src = previewUrl;
       previewPlaceholder.classList.add('hidden');
       previewImg.classList.remove('hidden');
@@ -298,7 +301,7 @@
   }
 
   /**
-   * Schedule debounced update
+   * Debounced input handler
    */
   function handleInputDebounced() {
     renderCodeSnippet();
@@ -309,7 +312,7 @@
   }
 
   /**
-   * Immediate update (for dropdowns, checkboxes, tabs)
+   * Immediate change handler
    */
   function handleImmediateChange() {
     renderCodeSnippet();
@@ -323,15 +326,19 @@
     if (activeCard === cardType) return;
     activeCard = cardType;
 
+    // Update active badge header
+    if (activeBadgeTitle) activeBadgeTitle.textContent = CARD_TITLES[cardType] || 'Badge';
+    if (activeBadgeEndpoint) activeBadgeEndpoint.textContent = CARD_ENDPOINTS[cardType] || '';
+
     // Update tab button styles
     cardTabBtns.forEach(btn => {
       const isCurrent = btn.dataset.card === cardType;
       if (isCurrent) {
-        btn.classList.add('border-purple-500', 'bg-purple-500/10', 'text-white');
-        btn.classList.remove('border-gray-800', 'bg-gray-900/60', 'text-gray-400');
+        btn.classList.add('border-emerald-500', 'bg-emerald-500/10', 'text-white');
+        btn.classList.remove('border-[#30363d]', 'bg-[#0d1117]', 'text-[#c9d1d9]');
       } else {
-        btn.classList.remove('border-purple-500', 'bg-purple-500/10', 'text-white');
-        btn.classList.add('border-gray-800', 'bg-gray-900/60', 'text-gray-400');
+        btn.classList.remove('border-emerald-500', 'bg-emerald-500/10', 'text-white');
+        btn.classList.add('border-[#30363d]', 'bg-[#0d1117]', 'text-[#c9d1d9]');
       }
     });
 
@@ -340,7 +347,7 @@
     sectionStreakOptions.classList.toggle('hidden', cardType !== 'streak');
     sectionLanguagesOptions.classList.toggle('hidden', cardType !== 'languages');
 
-    // icon_color is available in stats and streak, but not in languages
+    // icon_color visibility
     if (cardType === 'languages') {
       rowIconColor.classList.add('hidden');
     } else {
@@ -351,7 +358,7 @@
   }
 
   /**
-   * Switch Export Format (Markdown / HTML / Link)
+   * Switch Export Format
    */
   function switchFormat(format) {
     activeFormat = format;
@@ -359,11 +366,11 @@
     formatTabBtns.forEach(btn => {
       const isCurrent = btn.dataset.format === format;
       if (isCurrent) {
-        btn.classList.add('bg-purple-600', 'text-white');
-        btn.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:bg-gray-800');
+        btn.classList.add('bg-emerald-600', 'text-white');
+        btn.classList.remove('text-[#8b949e]', 'hover:text-white', 'hover:bg-[#21262d]');
       } else {
-        btn.classList.remove('bg-purple-600', 'text-white');
-        btn.classList.add('text-gray-400', 'hover:text-gray-200', 'hover:bg-gray-800');
+        btn.classList.remove('bg-emerald-600', 'text-white');
+        btn.classList.add('text-[#8b949e]', 'hover:text-white', 'hover:bg-[#21262d]');
       }
     });
 
@@ -392,14 +399,13 @@
         document.body.removeChild(textarea);
       }
 
-      // Success feedback
-      copyText.textContent = 'Copiado!';
-      btnCopyCode.classList.remove('bg-purple-600', 'hover:bg-purple-700');
-      btnCopyCode.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      copyText.textContent = 'Copied!';
+      btnCopyCode.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+      btnCopyCode.classList.add('bg-emerald-700');
       setTimeout(() => {
-        copyText.textContent = 'Copiar';
-        btnCopyCode.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
-        btnCopyCode.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        copyText.textContent = 'Copy';
+        btnCopyCode.classList.remove('bg-emerald-700');
+        btnCopyCode.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
       }, 2000);
     } catch (err) {
       console.error('Failed to copy', err);
