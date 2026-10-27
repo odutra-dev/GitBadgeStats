@@ -1,0 +1,10 @@
+# Pre-commit configuration for GitBadgeStats
+# Learn more: https://pre-commit.com
+
+repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.0.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert]
