@@ -1,5 +1,5 @@
 /**
- * GitBadgeStats - Interactive Badge Generator & Preview (Shields.io Style)
+ * Git Badge Stats - Interactive Badge Generator & Preview
  */
 
 (function () {
@@ -33,7 +33,6 @@
   const formatTabBtns = document.querySelectorAll('.format-tab-btn');
   const toggleProductionUrl = document.getElementById('toggle-production-url');
 
-  const activeBadgeTitle = document.getElementById('active-badge-title');
   const activeBadgeEndpoint = document.getElementById('active-badge-endpoint');
 
   // Preview elements
@@ -48,7 +47,6 @@
   const codeOutput = document.getElementById('code-output');
   const btnCopyCode = document.getElementById('btn-copy-code');
   const copyText = document.getElementById('copy-text');
-  const copyIcon = document.getElementById('copy-icon');
 
   // Form elements
   const cardForm = document.getElementById('card-form');
@@ -327,18 +325,17 @@
     activeCard = cardType;
 
     // Update active badge header
-    if (activeBadgeTitle) activeBadgeTitle.textContent = CARD_TITLES[cardType] || 'Badge';
     if (activeBadgeEndpoint) activeBadgeEndpoint.textContent = CARD_ENDPOINTS[cardType] || '';
 
     // Update tab button styles
     cardTabBtns.forEach(btn => {
       const isCurrent = btn.dataset.card === cardType;
       if (isCurrent) {
-        btn.classList.add('border-emerald-500', 'bg-emerald-500/10', 'text-white');
-        btn.classList.remove('border-[#30363d]', 'bg-[#0d1117]', 'text-[#c9d1d9]');
+        btn.classList.add('border-purple-500', 'bg-purple-500/10', 'text-white');
+        btn.classList.remove('border-zinc-800', 'bg-zinc-900/40', 'text-zinc-400');
       } else {
-        btn.classList.remove('border-emerald-500', 'bg-emerald-500/10', 'text-white');
-        btn.classList.add('border-[#30363d]', 'bg-[#0d1117]', 'text-[#c9d1d9]');
+        btn.classList.remove('border-purple-500', 'bg-purple-500/10', 'text-white');
+        btn.classList.add('border-zinc-800', 'bg-zinc-900/40', 'text-zinc-400');
       }
     });
 
@@ -366,11 +363,11 @@
     formatTabBtns.forEach(btn => {
       const isCurrent = btn.dataset.format === format;
       if (isCurrent) {
-        btn.classList.add('bg-emerald-600', 'text-white');
-        btn.classList.remove('text-[#8b949e]', 'hover:text-white', 'hover:bg-[#21262d]');
+        btn.classList.add('bg-purple-600', 'text-white', 'shadow-sm');
+        btn.classList.remove('text-zinc-400', 'hover:text-zinc-200');
       } else {
-        btn.classList.remove('bg-emerald-600', 'text-white');
-        btn.classList.add('text-[#8b949e]', 'hover:text-white', 'hover:bg-[#21262d]');
+        btn.classList.remove('bg-purple-600', 'text-white', 'shadow-sm');
+        btn.classList.add('text-zinc-400', 'hover:text-zinc-200');
       }
     });
 
@@ -400,12 +397,12 @@
       }
 
       copyText.textContent = 'Copied!';
-      btnCopyCode.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
-      btnCopyCode.classList.add('bg-emerald-700');
+      btnCopyCode.classList.remove('bg-zinc-100', 'hover:bg-white', 'text-zinc-950');
+      btnCopyCode.classList.add('bg-emerald-600', 'text-white');
       setTimeout(() => {
         copyText.textContent = 'Copy';
-        btnCopyCode.classList.remove('bg-emerald-700');
-        btnCopyCode.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+        btnCopyCode.classList.remove('bg-emerald-600', 'text-white');
+        btnCopyCode.classList.add('bg-zinc-100', 'hover:bg-white', 'text-zinc-950');
       }, 2000);
     } catch (err) {
       console.error('Failed to copy', err);

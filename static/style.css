@@ -1,61 +1,107 @@
-/* Shields.io-inspired developer aesthetic styles */
+/* Modern Developer-First UI (Linear / Vercel Aesthetic) */
 
 :root {
   color-scheme: dark;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #0d1117;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #09090b;
+  color: #f4f4f5;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.12), transparent);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-/* Subtle checkerboard pattern for badge preview canvas */
-.checkerboard-bg {
-  background-color: #090d16;
-  background-image: 
-    linear-gradient(45deg, #111827 25%, transparent 25%), 
-    linear-gradient(-45deg, #111827 25%, transparent 25%), 
-    linear-gradient(45deg, transparent 75%, #111827 75%), 
-    linear-gradient(-45deg, transparent 75%, #111827 75%);
-  background-size: 16px 16px;
-  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+/* Typography tracking */
+h1, h2, h3 {
+  letter-spacing: -0.025em;
 }
 
-/* Custom scrollbars */
+/* Minimalist scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d1117;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #21262d;
-  border-radius: 3px;
+  background: #27272a;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #30363d;
+  background: #3f3f46;
 }
 
-/* Color input styling */
+/* Color picker styling */
 input[type="color"] {
   -webkit-appearance: none;
   border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   cursor: pointer;
   background: transparent;
+  padding: 0;
 }
 input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
 }
 input[type="color"]::-webkit-color-swatch {
-  border: 1px solid #30363d;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
 }
 
-/* Code block font */
-.font-mono-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+/* Shimmer animation for preview loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(39, 39, 42, 0.3) 25%, rgba(63, 63, 70, 0.5) 50%, rgba(39, 39, 42, 0.3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
+/* Toggle Switch Styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #27272a;
+  transition: .2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #a1a1aa;
+  transition: .2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #7c3aed;
+  border-color: #8b5cf6;
+}
+input:checked + .slider:before {
+  transform: translateX(16px);
+  background-color: #ffffff;
 }
