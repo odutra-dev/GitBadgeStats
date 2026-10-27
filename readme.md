@@ -20,6 +20,17 @@
 
 ---
 
+## ✨ Interactive Badge Generator (Web UI)
+
+Git Badge Stats includes a built-in web customizer directly at the root (`/`):
+- **Live Visual Preview:** Customize any card (Stats, Streak, Top Languages) with instant feedback.
+- **Theme & Color Customizer:** Easily choose from 70+ built-in themes or customize title, text, icon, border, and background colors.
+- **One-Click Readme Snippets:** Instantly copy formatted badges for Markdown (`![...]`), HTML (`<img ... />`), or direct image URLs.
+
+Access the generator online at [git-badge-stats.vercel.app](https://git-badge-stats.vercel.app/) or locally at `http://localhost:8000/`.
+
+---
+
 ## 1. 🔥 Duolingo-Style Streak Card
 
 Inspired by Duolingo streaks, this card monitors your daily GitHub commit consistency and motivates you to keep coding every day:
@@ -213,7 +224,7 @@ GITHUB_TOKEN=ghp_your_personal_access_token
 uvicorn main:app --reload --port 8000
 ```
 
-The server will be available at `http://localhost:8000`. You can also explore interactive API documentation at `http://localhost:8000/docs`.
+The web generator will be available at `http://localhost:8000/`. You can also explore interactive API documentation at `http://localhost:8000/docs`.
 
 ### 5. Run Automated Tests
 

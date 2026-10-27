@@ -29,3 +29,23 @@ def test_get_locales():
     assert "locales" in data
     assert isinstance(data["locales"], list)
     assert set(data["locales"]) == set(SUPPORTED_LOCALES)
+
+
+def test_serve_home():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers.get("content-type", "")
+    assert "Git Badge Stats" in response.text
+    assert "card-tab-btn" in response.text
+    assert "input-username" in response.text
+
+
+def test_serve_static_assets():
+    css_res = client.get("/static/style.css")
+    assert css_res.status_code == 200
+    assert "text/css" in css_res.headers.get("content-type", "")
+
+    js_res = client.get("/static/app.js")
+    assert js_res.status_code == 200
+    assert "javascript" in js_res.headers.get("content-type", "")
+

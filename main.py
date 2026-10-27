@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Any
 from typing import Optional
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -7,6 +8,8 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
 from fastapi import HTTPException
 from fastapi.exception_handlers import http_exception_handler
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from src.common.themes import themes
@@ -59,11 +62,16 @@ def _validate_timezone(timezone_name: str) -> None:
             ),
         )
 
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
 app = FastAPI(
     title="Custom GitHub Stats & Streak",
     description="Dynamic GitHub README badges: General statistics, Duolingo-style commit streak, and Top Languages cards.",
     version="2.0.0",
 )
+
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 CACHE_HEADERS = {
     "Cache-Control": "public, max-age=14400, s-maxage=14400, stale-while-revalidate=86400",
@@ -106,6 +114,15 @@ async def render_badge_error_as_svg(request: Request, exc: StarletteHTTPExceptio
         "Content-Type": "image/svg+xml; charset=utf-8",
     }
     return Response(content=card.svg, media_type="image/svg+xml", headers=headers)
+
+@app.get("/", response_class=FileResponse)
+async def serve_home():
+    """Serve the interactive home generator page."""
+    index_file = STATIC_DIR / "index.html"
+    if not index_file.exists():
+        raise HTTPException(status_code=404, detail="Homepage not found")
+    return FileResponse(index_file)
+
 
 @app.get("/health")
 async def health_check():
