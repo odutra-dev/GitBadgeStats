@@ -23,6 +23,7 @@
 ## ✨ Interactive Badge Generator (Web UI)
 
 Git Badge Stats includes a built-in web customizer directly at the root (`/`):
+
 - **Live Visual Preview:** Customize any card (Stats, Streak, Top Languages) with instant feedback.
 - **Theme & Color Customizer:** Easily choose from 70+ built-in themes or customize title, text, icon, border, and background colors.
 - **One-Click Readme Snippets:** Instantly copy formatted badges for Markdown (`![...]`), HTML (`<img ... />`), or direct image URLs.
@@ -56,23 +57,26 @@ Inspired by Duolingo streaks, this card monitors your daily GitHub commit consis
 Or in HTML:
 
 ```html
-<img src="https://git-badge-stats.vercel.app/api/streak?username=odutra-dev&theme=dracula" alt="GitHub Streak" />
+<img
+  src="https://git-badge-stats.vercel.app/api/streak?username=odutra-dev&theme=dracula"
+  alt="GitHub Streak"
+/>
 ```
 
 ### Streak Card Query Parameters
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `username` | `string` | **Required** | GitHub username |
-| `theme` | `string` | `default` | Visual theme name (over 70 themes available) |
-| `timezone` | `string` | `UTC` | Timezone for accurate day calculation (e.g., `America/Sao_Paulo`, `America/New_York`) |
-| `locale` | `string` | `en` | Display language (`en` for English, `pt` for Portuguese) |
-| `hide_days` | `boolean` | `false` | When `true`, hides the 7-day weekly tracker for a compact card |
-| `title_color` | `string` | - | Custom hex color for titles (without `#`, e.g., `ff5555`) |
-| `text_color` | `string` | - | Custom hex color for labels and body text |
-| `icon_color` | `string` | - | Custom hex color for metric icons |
-| `bg_color` | `string` | - | Custom hex color or angle gradient (e.g., `35,4158d0,c850c0,ffcc70`) |
-| `border_color`| `string` | - | Custom hex color for card border |
+| Parameter      | Type      | Default      | Description                                                                           |
+| :------------- | :-------- | :----------- | :------------------------------------------------------------------------------------ |
+| `username`     | `string`  | **Required** | GitHub username                                                                       |
+| `theme`        | `string`  | `default`    | Visual theme name (over 70 themes available)                                          |
+| `timezone`     | `string`  | `UTC`        | Timezone for accurate day calculation (e.g., `America/Sao_Paulo`, `America/New_York`) |
+| `locale`       | `string`  | `en`         | Display language (`en` for English, `pt` for Portuguese)                              |
+| `hide_days`    | `boolean` | `false`      | When `true`, hides the 7-day weekly tracker for a compact card                        |
+| `title_color`  | `string`  | -            | Custom hex color for titles (without `#`, e.g., `ff5555`)                             |
+| `text_color`   | `string`  | -            | Custom hex color for labels and body text                                             |
+| `icon_color`   | `string`  | -            | Custom hex color for metric icons                                                     |
+| `bg_color`     | `string`  | -            | Custom hex color or angle gradient (e.g., `35,4158d0,c850c0,ffcc70`)                  |
+| `border_color` | `string`  | -            | Custom hex color for card border                                                      |
 
 ---
 
@@ -100,16 +104,16 @@ Or using the standard `/api` route:
 
 ### Stats Card Query Parameters
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `username` | `string` | **Required** | GitHub username |
-| `theme` | `string` | `default` | Visual theme name |
-| `hide_rank` | `boolean` | `false` | When `true`, hides the circular dynamic rank gauge |
-| `title_color` | `string` | - | Custom hex color for card title |
-| `text_color` | `string` | - | Custom hex color for stats text |
-| `icon_color` | `string` | - | Custom hex color for category icons |
-| `bg_color` | `string` | - | Custom hex color or gradient for background |
-| `border_color`| `string` | - | Custom hex color for card border |
+| Parameter      | Type      | Default      | Description                                        |
+| :------------- | :-------- | :----------- | :------------------------------------------------- |
+| `username`     | `string`  | **Required** | GitHub username                                    |
+| `theme`        | `string`  | `default`    | Visual theme name                                  |
+| `hide_rank`    | `boolean` | `false`      | When `true`, hides the circular dynamic rank gauge |
+| `title_color`  | `string`  | -            | Custom hex color for card title                    |
+| `text_color`   | `string`  | -            | Custom hex color for stats text                    |
+| `icon_color`   | `string`  | -            | Custom hex color for category icons                |
+| `bg_color`     | `string`  | -            | Custom hex color or gradient for background        |
+| `border_color` | `string`  | -            | Custom hex color for card border                   |
 
 ---
 
@@ -139,19 +143,56 @@ Or using the `/api/languages` route:
 ![Top Languages](https://git-badge-stats.vercel.app/api/languages?username=odutra-dev&theme=tokyonight)
 ```
 
+## 4. 👤 Profile Card
+
+A business-card summary of your GitHub profile:
+
+- **Five metrics at a glance:** followers, following, repositories, stars received and account age.
+- **Compact numbers:** large counts are abbreviated (`21400` becomes `21.4k`).
+- **Localized:** labels and the account age follow the `locale` parameter.
+- **Owned repositories only:** repositories and stars count repositories you own, excluding forks.
+
+### Preview
+
+<p align="center">
+  <img src="https://git-badge-stats.vercel.app/api/profile?username=odutra-dev&theme=tokyonight" alt="Profile Card Preview" />
+</p>
+
+### Usage
+
+```markdown
+![GitHub Profile](https://git-badge-stats.vercel.app/api/profile?username=odutra-dev&theme=tokyonight)
+```
+
+### Profile Card Query Parameters
+
+| Parameter      | Type     | Default                   | Description                                     |
+| :------------- | :------- | :------------------------ | :---------------------------------------------- |
+| `username`     | `string` | **Required**              | GitHub username                                 |
+| `theme`        | `string` | `default`                 | Visual theme name                               |
+| `locale`       | `string` | `en`                      | Language of labels and account age (`en`, `pt`) |
+| `card_title`   | `string` | `{name}'s GitHub Profile` | Custom title for the card                       |
+| `title_color`  | `string` | -                         | Custom hex color for card title                 |
+| `text_color`   | `string` | -                         | Custom hex color for labels and values          |
+| `icon_color`   | `string` | -                         | Custom hex color for icons                      |
+| `bg_color`     | `string` | -                         | Custom hex color or gradient for background     |
+| `border_color` | `string` | -                         | Custom hex color for card border                |
+
+---
+
 ### Top Languages Query Parameters
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `username` | `string` | **Required** | GitHub username |
-| `theme` | `string` | `default` | Visual theme name |
-| `hide` | `string` | - | Comma-separated languages to exclude (e.g., `html,css,jupyter notebook`) |
-| `exclude_repo` | `string` | - | Comma-separated repository names to ignore |
-| `card_title` | `string` | `Most Used Languages` | Custom title for the card |
-| `title_color` | `string` | - | Custom hex color for card title |
-| `text_color` | `string` | - | Custom hex color for language labels and percentages |
-| `bg_color` | `string` | - | Custom hex color or gradient for background |
-| `border_color`| `string` | - | Custom hex color for card border |
+| Parameter      | Type     | Default               | Description                                                              |
+| :------------- | :------- | :-------------------- | :----------------------------------------------------------------------- |
+| `username`     | `string` | **Required**          | GitHub username                                                          |
+| `theme`        | `string` | `default`             | Visual theme name                                                        |
+| `hide`         | `string` | -                     | Comma-separated languages to exclude (e.g., `html,css,jupyter notebook`) |
+| `exclude_repo` | `string` | -                     | Comma-separated repository names to ignore                               |
+| `card_title`   | `string` | `Most Used Languages` | Custom title for the card                                                |
+| `title_color`  | `string` | -                     | Custom hex color for card title                                          |
+| `text_color`   | `string` | -                     | Custom hex color for language labels and percentages                     |
+| `bg_color`     | `string` | -                     | Custom hex color or gradient for background                              |
+| `border_color` | `string` | -                     | Custom hex color for card border                                         |
 
 ---
 
@@ -159,11 +200,11 @@ Or using the `/api/languages` route:
 
 Badges are embedded with `<img>` tags, so a JSON error would just show up as a broken image. When a badge request fails, the API returns a small SVG card instead, styled with the same `theme`, color parameters and `locale` as the badge:
 
-| Situation | Card |
-| :--- | :--- |
-| Unknown username | `User not found` |
-| GitHub rate limit reached | `GitHub rate limit reached` (with the wait time, when GitHub provides it) |
-| Anything else (token or GitHub problems) | `Could not load GitHub data` |
+| Situation                                | Card                                                                      |
+| :--------------------------------------- | :------------------------------------------------------------------------ |
+| Unknown username                         | `User not found`                                                          |
+| GitHub rate limit reached                | `GitHub rate limit reached` (with the wait time, when GitHub provides it) |
+| Anything else (token or GitHub problems) | `Could not load GitHub data`                                              |
 
 - **HTTP status is `200`** for these cards on purpose. GitHub serves README images through its Camo proxy, which replies `404` for any other upstream status, so an error status would still show a broken image.
 - **Short cache lifetime** (1 to 15 minutes, no `stale-while-revalidate`), so the card goes away soon after the problem is fixed.

@@ -10,6 +10,7 @@ from src.services.cache import SimpleTTLCache
 from src.services.github_client import GitHubGraphQLClient
 from src.services.github_service import (
     _fetch_all_repository_pages,
+    fetch_github_profile,
     fetch_github_stats,
     fetch_github_streak,
     fetch_github_top_languages,
@@ -50,6 +51,8 @@ class ScriptedGitHubClient(GitHubGraphQLClient):
             key = "languages"
         elif "userStreak" in query:
             key = "streak"
+        elif "userProfile" in query:
+            key = "profile"        
         else:
             raise AssertionError(f"Unexpected GraphQL query: {query}")
 
@@ -503,3 +506,142 @@ def test_fetch_github_streak_maps_calendar_and_uses_cache() -> None:
     assert len(client.calls) == 1
 
 
+def _profile_page(
+    repositories: list[JSONDict],
+    *,
+    total_count: int | None = None,
+    has_next_page: bool = False,
+    end_cursor: str | None = None,
+) -> JSONDict:
+    """Build a user payload page for the profile GraphQL query."""
+    return {
+        "name": "Octocat",
+        "login": "octocat",
+        "createdAt": "2011-01-25T18:44:36Z",
+        "followers": {"totalCount": 21400},
+        "following": {"totalCount": 9},
+        "repositories": {
+            "totalCount": len(repositories) if total_count is None else total_count,
+            "nodes": repositories,
+            "pageInfo": {
+                "hasNextPage": has_next_page,
+                "endCursor": end_cursor,
+            },
+        },
+    }
+
+
+def test_profile_query_supports_repository_pagination() -> None:
+    """The query must accept the cursor used by the shared pagination helper."""
+    query = GitHubGraphQLClient.get_profile_graphql_query()
+
+    assert "userProfile" in query
+    assert "$after: String" in query
+    assert "pageInfo" in query
+    assert "createdAt" in query
+
+
+def test_fetch_github_profile_maps_fields_and_sums_stars_across_pages() -> None:
+    """Stars are summed across pages while the repository total comes from GitHub."""
+    first_page = [
+        {"stargazers": {"totalCount": 1}}
+        for _ in range(100)
+    ]
+    client = ScriptedGitHubClient({
+        "profile": [
+            _profile_page(
+                first_page,
+                total_count=101,
+                has_next_page=True,
+                end_cursor="profile-cursor-1",
+            ),
+            _profile_page(
+                [{"stargazers": {"totalCount": 50}}],
+                total_count=101,
+            ),
+        ]
+    })
+
+    result = asyncio.run(
+        fetch_github_profile(
+            "  Octocat  ",
+            use_cache=False,
+            client=client,
+            cache_backend=SimpleTTLCache(),
+        )
+    )
+
+    assert result == {
+        "name": "Octocat",
+        "login": "octocat",
+        "created_at": "2011-01-25T18:44:36Z",
+        "followers": 21400,
+        "following": 9,
+        "repositories": 101,
+        "stars": 150,
+    }
+    assert len(client.calls) == 2
+    assert client.calls[0]["variables"] == {"login": "Octocat", "after": None}
+    assert client.calls[1]["variables"] == {
+        "login": "Octocat",
+        "after": "profile-cursor-1",
+    }
+
+
+def test_fetch_github_profile_uses_defaults_for_missing_fields() -> None:
+    """A sparse payload falls back to the login and zero counts."""
+    client = ScriptedGitHubClient({
+        "profile": [
+            {
+                "name": None,
+                "login": "octocat",
+                "repositories": {"nodes": []},
+            }
+        ]
+    })
+
+    result = asyncio.run(
+        fetch_github_profile(
+            "octocat",
+            use_cache=False,
+            client=client,
+            cache_backend=SimpleTTLCache(),
+        )
+    )
+
+    assert result == {
+        "name": "octocat",
+        "login": "octocat",
+        "created_at": None,
+        "followers": 0,
+        "following": 0,
+        "repositories": 0,
+        "stars": 0,
+    }
+
+
+def test_fetch_github_profile_returns_cached_result() -> None:
+    """Equivalent usernames reuse the normalized profile cache key."""
+    client = ScriptedGitHubClient({
+        "profile": [_profile_page([{"stargazers": {"totalCount": 8}}])]
+    })
+    test_cache = SimpleTTLCache()
+
+    first = asyncio.run(
+        fetch_github_profile(
+            "Octocat",
+            client=client,
+            cache_backend=test_cache,
+        )
+    )
+    second = asyncio.run(
+        fetch_github_profile(
+            " OCTOCAT ",
+            client=client,
+            cache_backend=test_cache,
+        )
+    )
+
+    assert first == second
+    assert first["stars"] == 8
+    assert len(client.calls) == 1

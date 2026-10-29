@@ -24,7 +24,7 @@ def get_headers() -> dict:
 get_stats_graphql_query = GitHubGraphQLClient.get_stats_graphql_query
 get_streak_graphql_query = GitHubGraphQLClient.get_streak_graphql_query
 get_top_languages_graphql_query = GitHubGraphQLClient.get_top_languages_graphql_query
-
+get_profile_graphql_query = GitHubGraphQLClient.get_profile_graphql_query
 
 async def _fetch_all_repository_pages(
     username: str,
@@ -260,6 +260,56 @@ async def fetch_github_top_languages(
         "name": user_data["name"] or user_data["login"],
         "login": user_data["login"],
         "languages": top_languages,
+    }
+
+    if use_cache:
+        active_cache.set(cache_key, result)
+
+    return result
+
+
+
+async def fetch_github_profile(
+    username: str,
+    use_cache: bool = True,
+    client: Optional[GitHubGraphQLClient] = None,
+    cache_backend: Optional[CacheBackend] = None,
+) -> dict:
+    """Fetch profile summary data: followers, following, repositories, stars, creation date.
+
+    The account creation date is cached as-is; the account age is computed when the card is
+    rendered, so a cached result never shows a stale age.
+    """
+    clean_username = username.strip()
+    cache_key = f"profile:{clean_username.lower()}"
+    active_cache = cache_backend or cache
+
+    if use_cache:
+        cached = active_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+    active_client = client or default_github_client
+
+    user_data: dict[Any, Any] = await _fetch_all_repository_pages(
+        username=clean_username,
+        query=active_client.get_profile_graphql_query(),
+        client=active_client,
+    )
+
+    repositories = user_data.get("repositories") or {}
+
+    result: dict[str, Any] = {
+        "name": user_data["name"] or user_data["login"],
+        "login": user_data["login"],
+        "created_at": user_data.get("createdAt"),
+        "followers": (user_data.get("followers") or {}).get("totalCount", 0),
+        "following": (user_data.get("following") or {}).get("totalCount", 0),
+        "repositories": repositories.get("totalCount", 0),
+        "stars": sum(
+            (repo.get("stargazers") or {}).get("totalCount", 0)
+            for repo in repositories.get("nodes") or []
+        ),
     }
 
     if use_cache:

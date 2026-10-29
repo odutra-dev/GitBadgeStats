@@ -154,6 +154,42 @@ class GitHubGraphQLClient:
         """
 
     @staticmethod
+    def get_profile_graphql_query() -> str:
+        """GraphQL query for profile summary: followers, repositories, stars and creation date."""
+        return """
+        query userProfile($login: String!, $after: String) {
+          user(login: $login) {
+            name
+            login
+            createdAt
+            followers {
+              totalCount
+            }
+            following {
+              totalCount
+            }
+            repositories(
+              first: 100,
+              after: $after,
+              ownerAffiliations: OWNER,
+              isFork: false
+            ) {
+              totalCount
+              nodes {
+                stargazers {
+                  totalCount
+                }
+              }
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+            }
+          }
+        }
+        """
+
+    @staticmethod
     def _upstream_message(response: httpx.Response) -> str:
         """Best-effort extraction of GitHub's own error message from a response body."""
         try:

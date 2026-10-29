@@ -114,6 +114,22 @@ MOCK_USER_NOT_FOUND = {
     ],
 }
 
+MOCK_USER_PROFILE = {
+    "data": {
+        "user": {
+            "name": "The Octocat",
+            "login": "octocat",
+            "createdAt": "2011-01-25T18:44:36Z",
+            "followers": {"totalCount": 21400},
+            "following": {"totalCount": 9},
+            "repositories": {
+                "totalCount": 8,
+                "nodes": [{"stargazers": {"totalCount": 85}}],
+                "pageInfo": {"hasNextPage": False, "endCursor": None},
+            },
+        }
+    }
+}
 
 def mock_github_post(url: str, *args: object, **kwargs: object) -> httpx.Response:
     """Simulate GitHub GraphQL responses for endpoint tests."""
@@ -134,6 +150,8 @@ def mock_github_post(url: str, *args: object, **kwargs: object) -> httpx.Respons
         return httpx.Response(200, json=MOCK_USER_LANGUAGES)
     if "userStreak" in query:
         return httpx.Response(200, json=MOCK_USER_STREAK)
+    if "userProfile" in query:
+        return httpx.Response(200, json=MOCK_USER_PROFILE)
     return httpx.Response(200, json=MOCK_USER_STATS)
 
 
@@ -248,3 +266,41 @@ def test_health_check() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+def test_get_profile_success() -> None:
+    response = client.get("/api/profile?username=octocat&theme=dracula")
+
+    assert response.status_code == 200
+    assert "image/svg+xml" in response.headers["Content-Type"]
+    assert "max-age=14400" in response.headers["Cache-Control"]
+    assert "The Octocat" in response.text
+    assert "Followers" in response.text
+    assert "21.4k" in response.text
+
+
+def test_get_profile_portuguese_locale() -> None:
+    response = client.get("/api/profile?username=octocat&locale=pt")
+
+    assert response.status_code == 200
+    assert "Seguidores" in response.text
+    assert "Perfil GitHub de The Octocat" in response.text
+
+
+def test_get_profile_custom_title() -> None:
+    response = client.get("/api/profile?username=octocat&card_title=My%20business%20card")
+
+    assert response.status_code == 200
+    assert "My business card" in response.text
+
+
+def test_get_profile_not_found() -> None:
+    response = client.get("/api/profile?username=nonexistentuser1234567890")
+
+    assert_user_not_found_error_card(response)
+
+
+def test_get_profile_no_username() -> None:
+    response = client.get("/api/profile?theme=default")
+
+    assert response.status_code == 422
+    assert response.headers["Content-Type"] == "application/json"

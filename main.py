@@ -14,10 +14,12 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from src.common.themes import themes
 from src.renderers.languages_card import generate_languages_svg
+from src.renderers.profile_card import generate_profile_svg
 from src.renderers.stats_card import generate_svg
 from src.renderers.streak_card import generate_streak_svg
 from src.services.error_cards import build_error_card
 from src.services.github_service import (
+    fetch_github_profile,
     fetch_github_stats,
     fetch_github_streak,
     fetch_github_top_languages,
@@ -88,6 +90,7 @@ BADGE_PATHS = frozenset({
     "/api/ofensiva",
     "/api/top-langs",
     "/api/languages",
+    "/api/profile",
 })
 
 
@@ -244,6 +247,40 @@ async def get_top_languages(
         theme_name=theme,
         title_color_override=title_color,
         text_color_override=text_color,
+        bg_color_override=bg_color,
+        border_color_override=border_color,
+        custom_title=card_title,
+    )
+
+    return Response(content=svg_content, media_type="image/svg+xml", headers=CACHE_HEADERS)
+
+
+
+@app.get("/api/profile")
+async def get_profile(
+    username: str,
+    theme: str = "default",
+    locale: str = "en",
+    title_color: Optional[str] = None,
+    text_color: Optional[str] = None,
+    icon_color: Optional[str] = None,
+    bg_color: Optional[str] = None,
+    border_color: Optional[str] = None,
+    card_title: Optional[str] = None,
+):
+    """Generate a profile summary SVG badge: followers, following, repositories, stars, account age."""
+    _validate_theme(theme)
+    _validate_locale(locale)
+
+    profile_data: dict[Any, Any] = await fetch_github_profile(username)
+
+    svg_content: str = generate_profile_svg(
+        profile_data,
+        theme_name=theme,
+        locale=locale,
+        title_color_override=title_color,
+        text_color_override=text_color,
+        icon_color_override=icon_color,
         bg_color_override=bg_color,
         border_color_override=border_color,
         custom_title=card_title,

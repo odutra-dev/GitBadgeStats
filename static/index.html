@@ -1,473 +1,934 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Git Badge Stats - Dynamic GitHub Profile Badges</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  
-  <!-- Inter & JetBrains Mono Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Badge Stats - Dynamic GitHub Profile Badges</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>"
+    />
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
+    <!-- Inter & JetBrains Mono Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+            colors: {
+              brand: {
+                500: "#7c3aed",
+                600: "#6d28d9",
+              },
+            },
           },
-          colors: {
-            brand: {
-              500: '#7c3aed',
-              600: '#6d28d9',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
-<body class="min-h-screen flex flex-col antialiased font-sans selection:bg-purple-500/30 selection:text-purple-200">
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
 
-  <!-- Minimalist Top Navigation -->
-  <header class="border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-md sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <!-- Modern Spark / Energy Icon -->
-        <div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <div>
-          <span class="font-bold text-white text-base tracking-tight">Git Badge Stats</span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4 text-xs font-medium">
-        <a href="/docs" class="text-zinc-400 hover:text-white transition-colors">API Docs</a>
-        <a href="https://github.com/odutra-dev/GitBadgeStats" target="_blank" rel="noopener noreferrer"
-           class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-800 transition-colors">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-          </svg>
-          <span>Star on GitHub</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Clean Subheader / Hero -->
-  <section class="border-b border-zinc-800/60 bg-gradient-to-b from-zinc-900/30 to-transparent py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-          Profile Badge Builder
-        </h1>
-        <p class="text-sm text-zinc-400 mt-2 leading-relaxed">
-          Select and customize dynamic GitHub cards to showcase your commits, streaks, and top programming languages in your profile README.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content Grid -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-      <!-- LEFT COLUMN: CARDS SELECTION, PREVIEW & EMBED SNIPPET (7 cols) -->
-      <section class="lg:col-span-7 space-y-6">
-
-        <!-- 1. Card Options Selection -->
-        <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-          <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-            Choose Badge Card
-          </label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            
-            <!-- Option 1: Stats -->
-            <button type="button" data-card="stats"
-                    class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-purple-500 bg-purple-500/10 text-white shadow-sm hover:border-purple-400">
-              <div class="flex items-center gap-2 mb-1.5">
-                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <span class="text-xs font-semibold">GitHub Stats</span>
-              </div>
-              <p class="text-[11px] text-zinc-400 leading-snug">
-                Overall metrics and dynamic rank badge (S to C).
-              </p>
-            </button>
-
-            <!-- Option 2: Streak -->
-            <button type="button" data-card="streak"
-                    class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm">
-              <div class="flex items-center gap-2 mb-1.5">
-                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-                </svg>
-                <span class="text-xs font-semibold">Commit Streak</span>
-              </div>
-              <p class="text-[11px] text-zinc-400 leading-snug">
-                Duolingo-style streak counter and 7-day flame activity.
-              </p>
-            </button>
-
-            <!-- Option 3: Languages -->
-            <button type="button" data-card="languages"
-                    class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm">
-              <div class="flex items-center gap-2 mb-1.5">
-                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-                <span class="text-xs font-semibold">Top Languages</span>
-              </div>
-              <p class="text-[11px] text-zinc-400 leading-snug">
-                Top 5 most used languages with proportional bar.
-              </p>
-            </button>
-
+  <body
+    class="min-h-screen flex flex-col antialiased font-sans selection:bg-purple-500/30 selection:text-purple-200"
+  >
+    <!-- Minimalist Top Navigation -->
+    <header
+      class="border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-md sticky top-0 z-30"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <!-- Modern Spark / Energy Icon -->
+          <div
+            class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+          </div>
+          <div>
+            <span class="font-bold text-white text-base tracking-tight"
+              >Git Badge Stats</span
+            >
           </div>
         </div>
 
-        <!-- 2. Live Preview Canvas -->
-        <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <h2 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                Live Preview
-              </h2>
-            </div>
-            <div class="flex items-center gap-2">
-              <button id="btn-refresh-preview" type="button"
-                      class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span>Refresh</span>
+        <div class="flex items-center gap-4 text-xs font-medium">
+          <a
+            href="/docs"
+            class="text-zinc-400 hover:text-white transition-colors"
+            >API Docs</a
+          >
+          <a
+            href="https://github.com/odutra-dev/GitBadgeStats"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-800 transition-colors"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
+            </svg>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Clean Subheader / Hero -->
+    <section
+      class="border-b border-zinc-800/60 bg-gradient-to-b from-zinc-900/30 to-transparent py-8"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Profile Badge Builder
+          </h1>
+          <p class="text-sm text-zinc-400 mt-2 leading-relaxed">
+            Select and customize dynamic GitHub cards to showcase your commits,
+            streaks, and top programming languages in your profile README.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- LEFT COLUMN: CARDS SELECTION, PREVIEW & EMBED SNIPPET (7 cols) -->
+        <section class="lg:col-span-7 space-y-6">
+          <!-- 1. Card Options Selection -->
+          <div
+            class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm"
+          >
+            <label
+              class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3"
+              >Choose Badge Card</label
+            >
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Option 1: Stats -->
+              <button
+                type="button"
+                data-card="stats"
+                class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-purple-500 bg-purple-500/10 text-white shadow-sm hover:border-purple-400"
+              >
+                <div class="flex items-center gap-2 mb-1.5">
+                  <svg
+                    class="w-4 h-4 text-purple-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">GitHub Stats</span>
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-snug">
+                  Overall metrics and dynamic rank badge (S to C).
+                </p>
               </button>
-              <a id="link-open-raw" href="#" target="_blank" rel="noopener noreferrer"
-                 class="text-xs text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
-                <span>Raw SVG</span>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+
+              <!-- Option 2: Streak -->
+              <button
+                type="button"
+                data-card="streak"
+                class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm"
+              >
+                <div class="flex items-center gap-2 mb-1.5">
+                  <svg
+                    class="w-4 h-4 text-amber-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">Commit Streak</span>
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-snug">
+                  Duolingo-style streak counter and 7-day flame activity.
+                </p>
+              </button>
+
+              <!-- Option 3: Languages -->
+              <button
+                type="button"
+                data-card="languages"
+                class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm"
+              >
+                <div class="flex items-center gap-2 mb-1.5">
+                  <svg
+                    class="w-4 h-4 text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">Top Languages</span>
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-snug">
+                  Top 5 most used languages with proportional bar.
+                </p>
+              </button>
+
+              <!-- Option 4: Profile -->
+              <button
+                type="button"
+                data-card="profile"
+                class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm"
+              >
+                <div class="flex items-center gap-2 mb-1.5">
+                  <svg
+                    class="w-4 h-4 text-emerald-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">GitHub Profile</span>
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-snug">
+                  Business-card summary: followers, repositories, stars and
+                  account age.
+                </p>
+              </button>
             </div>
           </div>
 
-          <!-- Badge Container Canvas -->
-          <div id="preview-wrapper" class="min-h-[240px] rounded-xl bg-zinc-950 border border-zinc-800/80 flex items-center justify-center p-6 relative overflow-hidden transition-all">
-            
-            <!-- Loading Overlay -->
-            <div id="preview-loading" class="hidden absolute inset-0 bg-zinc-950/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3">
-              <div class="w-7 h-7 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-              <span class="text-xs text-zinc-400 font-medium">Fetching real-time data from GitHub...</span>
-            </div>
-
-            <!-- Empty State / Placeholder -->
-            <div id="preview-placeholder" class="text-center py-10 max-w-sm">
-              <div class="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3 text-zinc-500">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+          <!-- 2. Live Preview Canvas -->
+          <div
+            class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm space-y-4"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+                  ></span>
+                </span>
+                <h2
+                  class="text-xs font-semibold text-zinc-300 uppercase tracking-wider"
+                >
+                  Live Preview
+                </h2>
               </div>
-              <p class="text-sm font-semibold text-zinc-200">Enter your GitHub username</p>
-              <p class="text-xs text-zinc-500 mt-1">Provide a username in the panel to generate and preview your card.</p>
+              <div class="flex items-center gap-2">
+                <button
+                  id="btn-refresh-preview"
+                  type="button"
+                  class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <span>Refresh</span>
+                </button>
+                <a
+                  id="link-open-raw"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-xs text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
+                >
+                  <span>Raw SVG</span>
+                  <svg
+                    class="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </a>
+              </div>
             </div>
 
-            <!-- SVG Image Preview -->
-            <img id="preview-img" class="hidden max-w-full h-auto rounded-lg shadow-2xl transition-opacity duration-200" alt="GitHub Badge Preview" />
-          </div>
+            <!-- Badge Container Canvas -->
+            <div
+              id="preview-wrapper"
+              class="min-h-[240px] rounded-xl bg-zinc-950 border border-zinc-800/80 flex items-center justify-center p-6 relative overflow-hidden transition-all"
+            >
+              <!-- Loading Overlay -->
+              <div
+                id="preview-loading"
+                class="hidden absolute inset-0 bg-zinc-950/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3"
+              >
+                <div
+                  class="w-7 h-7 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"
+                ></div>
+                <span class="text-xs text-zinc-400 font-medium"
+                  >Fetching real-time data from GitHub...</span
+                >
+              </div>
 
-          <div class="flex items-center justify-between text-[11px] text-zinc-500 pt-1">
-            <span>Server response cached for 10 minutes</span>
-            <span id="active-badge-endpoint" class="font-mono text-zinc-400">GET /api/stats</span>
-          </div>
-        </div>
-
-        <!-- 3. Embed in README Code Block -->
-        <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                Embed in README
-              </h2>
-              <p class="text-xs text-zinc-400 mt-0.5">Copy and paste into your GitHub profile markdown or website.</p>
-            </div>
-
-            <!-- Production URL Toggle -->
-            <label class="inline-flex items-center gap-2 cursor-pointer text-xs text-zinc-400 hover:text-zinc-300 select-none">
-              <input id="toggle-production-url" type="checkbox" checked class="rounded bg-zinc-950 border-zinc-700 text-purple-600 focus:ring-purple-500" />
-              <span>Use Production URL</span>
-            </label>
-          </div>
-
-          <!-- Format Tabs -->
-          <div class="inline-flex p-1 rounded-xl bg-zinc-950 border border-zinc-800/80 gap-1">
-            <button type="button" data-format="markdown" class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-purple-600 text-white shadow-sm">
-              Markdown
-            </button>
-            <button type="button" data-format="html" class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200">
-              HTML
-            </button>
-            <button type="button" data-format="link" class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200">
-              Direct Link
-            </button>
-          </div>
-
-          <!-- Code Box -->
-          <div class="relative">
-            <pre class="bg-zinc-950 p-4 rounded-xl text-xs font-mono text-purple-300 border border-zinc-800/80 overflow-x-auto pr-24 whitespace-pre-wrap break-all min-h-[52px] flex items-center"><code id="code-output">https://git-badge-stats.vercel.app/api/stats?username=your-username</code></pre>
-
-            <button id="btn-copy-code" type="button"
-                    class="absolute right-2.5 top-2.5 px-3 py-1.5 bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all shadow-sm active:scale-95">
-              <svg id="copy-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              <span id="copy-text">Copy</span>
-            </button>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- RIGHT COLUMN: PARAMETER CONFIGURATION (5 cols) -->
-      <section class="lg:col-span-5 space-y-6">
-        <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
-          
-          <div class="flex items-center justify-between pb-4 border-b border-zinc-800/80 mb-5">
-            <div>
-              <h2 class="text-sm font-bold text-white tracking-tight">Query Parameters</h2>
-              <p class="text-xs text-zinc-400 mt-0.5">Customize badge options and styling</p>
-            </div>
-            <button id="btn-reset-form" type="button" class="text-xs text-zinc-400 hover:text-rose-400 transition-colors">
-              Reset defaults
-            </button>
-          </div>
-
-          <form id="card-form" class="space-y-5" onsubmit="return false;">
-
-            <!-- Username (Required) -->
-            <div>
-              <label for="input-username" class="flex items-center justify-between text-xs font-semibold text-zinc-200 mb-1.5">
-                <span class="flex items-center gap-1.5">
-                  <span>GitHub Username</span>
-                  <span class="text-rose-400">*</span>
-                </span>
-                <span class="text-[10px] font-medium text-rose-400 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded">
-                  Required
-                </span>
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <!-- Empty State / Placeholder -->
+              <div id="preview-placeholder" class="text-center py-10 max-w-sm">
+                <div
+                  class="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3 text-zinc-500"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                 </div>
-                <input id="input-username" type="text" required placeholder="e.g. octocat"
-                       class="w-full pl-9 pr-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl text-sm font-medium text-white placeholder-zinc-500 outline-none transition" />
-              </div>
-              <p id="username-error" class="text-xs text-rose-400 mt-1.5 hidden">Username is required to generate the card.</p>
-            </div>
-
-            <!-- Theme Selector -->
-            <div>
-              <label for="select-theme" class="block text-xs font-semibold text-zinc-200 mb-1.5">
-                Visual Theme
-              </label>
-              <select id="select-theme"
-                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl text-xs font-medium text-zinc-200 outline-none transition cursor-pointer">
-                <option value="default">default</option>
-              </select>
-              <p class="text-[11px] text-zinc-500 mt-1">Over 70 built-in themes available.</p>
-            </div>
-
-            <!-- CARD SPECIFIC SECTIONS -->
-
-            <!-- 1. Stats Card Specifics -->
-            <div id="section-stats-options" class="space-y-4 pt-3 border-t border-zinc-800/80">
-              <span class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider">Stats Settings</span>
-              
-              <label class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition">
-                <div>
-                  <span class="text-xs font-semibold text-zinc-200 block">Hide Dynamic Rank</span>
-                  <span class="text-[11px] text-zinc-400">Omits the circular rank badge gauge (`hide_rank=true`)</span>
-                </div>
-                <input id="input-hide-rank" type="checkbox" class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500" />
-              </label>
-            </div>
-
-            <!-- 2. Streak Card Specifics -->
-            <div id="section-streak-options" class="space-y-4 pt-3 border-t border-zinc-800/80 hidden">
-              <span class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider">Streak Settings</span>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label for="select-locale" class="block text-xs font-semibold text-zinc-200 mb-1">
-                    Language (`locale`)
-                  </label>
-                  <select id="select-locale" class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 outline-none transition cursor-pointer">
-                    <option value="en">English (en)</option>
-                    <option value="pt">Portuguese (pt)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label for="input-timezone" class="block text-xs font-semibold text-zinc-200 mb-1">
-                    Timezone (`timezone`)
-                  </label>
-                  <input id="input-timezone" type="text" list="timezone-suggestions" placeholder="UTC"
-                         class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition" />
-                  <datalist id="timezone-suggestions">
-                    <option value="UTC">UTC</option>
-                    <option value="America/Sao_Paulo">America/Sao_Paulo</option>
-                    <option value="America/New_York">America/New_York</option>
-                    <option value="Europe/London">Europe/London</option>
-                    <option value="Europe/Paris">Europe/Paris</option>
-                    <option value="Asia/Tokyo">Asia/Tokyo</option>
-                  </datalist>
-                </div>
-              </div>
-
-              <label class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition">
-                <div>
-                  <span class="text-xs font-semibold text-zinc-200 block">Compact Mode</span>
-                  <span class="text-[11px] text-zinc-400">Hides the 7-day weekly commit tracker (`hide_days=true`)</span>
-                </div>
-                <input id="input-hide-days" type="checkbox" class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500" />
-              </label>
-            </div>
-
-            <!-- 3. Languages Card Specifics -->
-            <div id="section-languages-options" class="space-y-4 pt-3 border-t border-zinc-800/80 hidden">
-              <span class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider">Languages Settings</span>
-              
-              <div>
-                <label for="input-card-title" class="block text-xs font-semibold text-zinc-200 mb-1">
-                  Custom Title (`card_title`)
-                </label>
-                <input id="input-card-title" type="text" placeholder="Most Used Languages"
-                       class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition" />
-              </div>
-
-              <div>
-                <label for="input-hide-langs" class="block text-xs font-semibold text-zinc-200 mb-1">
-                  Hide Languages (`hide`)
-                </label>
-                <input id="input-hide-langs" type="text" placeholder="e.g. html,css,jupyter notebook"
-                       class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition" />
-                <span class="text-[10px] text-zinc-500">Comma-separated</span>
-              </div>
-
-              <div>
-                <label for="input-exclude-repos" class="block text-xs font-semibold text-zinc-200 mb-1">
-                  Exclude Repositories (`exclude_repo`)
-                </label>
-                <input id="input-exclude-repos" type="text" placeholder="e.g. dotfiles,legacy-project"
-                       class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition" />
-                <span class="text-[10px] text-zinc-500">Comma-separated</span>
-              </div>
-            </div>
-
-            <!-- ADVANCED COLOR CUSTOMIZATION (ACCORDION) -->
-            <div class="pt-3 border-t border-zinc-800/80">
-              <button id="btn-toggle-colors" type="button"
-                      class="w-full flex items-center justify-between text-xs font-semibold text-zinc-400 hover:text-zinc-200 transition py-1">
-                <span>Custom Color Overrides</span>
-                <svg id="icon-colors-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              <div id="container-colors" class="hidden mt-3 space-y-3">
-                <p class="text-[11px] text-zinc-500">
-                  Provide hex values without <span class="text-purple-400 font-mono">#</span> (e.g. <span class="text-purple-400 font-mono">7928ca</span>) or pick interactively.
+                <p class="text-sm font-semibold text-zinc-200">
+                  Enter your GitHub username
                 </p>
-
-                <!-- title_color -->
-                <div class="flex items-center gap-2">
-                  <input type="color" id="picker-title-color" value="#ffffff" title="Pick title color" />
-                  <div class="flex-1">
-                    <label for="input-title-color" class="block text-[11px] text-zinc-400">Title Color (`title_color`)</label>
-                    <input id="input-title-color" type="text" placeholder="e.g. 7928ca" maxlength="6"
-                           class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none" />
-                  </div>
-                </div>
-
-                <!-- text_color -->
-                <div class="flex items-center gap-2">
-                  <input type="color" id="picker-text-color" value="#ffffff" title="Pick text color" />
-                  <div class="flex-1">
-                    <label for="input-text-color" class="block text-[11px] text-zinc-400">Text Color (`text_color`)</label>
-                    <input id="input-text-color" type="text" placeholder="e.g. e2e8f0" maxlength="6"
-                           class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none" />
-                  </div>
-                </div>
-
-                <!-- icon_color -->
-                <div id="row-icon-color" class="flex items-center gap-2">
-                  <input type="color" id="picker-icon-color" value="#ffffff" title="Pick icon color" />
-                  <div class="flex-1">
-                    <label for="input-icon-color" class="block text-[11px] text-zinc-400">Icon Color (`icon_color`)</label>
-                    <input id="input-icon-color" type="text" placeholder="e.g. f59e0b" maxlength="6"
-                           class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none" />
-                  </div>
-                </div>
-
-                <!-- bg_color -->
-                <div class="flex items-center gap-2">
-                  <input type="color" id="picker-bg-color" value="#0d1117" title="Pick background color" />
-                  <div class="flex-1">
-                    <label for="input-bg-color" class="block text-[11px] text-zinc-400">Background (`bg_color`)</label>
-                    <input id="input-bg-color" type="text" placeholder="e.g. 0d1117 or 35,4158d0,c850c0"
-                           class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none" />
-                  </div>
-                </div>
-
-                <!-- border_color -->
-                <div class="flex items-center gap-2">
-                  <input type="color" id="picker-border-color" value="#30363d" title="Pick border color" />
-                  <div class="flex-1">
-                    <label for="input-border-color" class="block text-[11px] text-zinc-400">Border Color (`border_color`)</label>
-                    <input id="input-border-color" type="text" placeholder="e.g. 30363d" maxlength="6"
-                           class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none" />
-                  </div>
-                </div>
-
+                <p class="text-xs text-zinc-500 mt-1">
+                  Provide a username in the panel to generate and preview your
+                  card.
+                </p>
               </div>
+
+              <!-- SVG Image Preview -->
+              <img
+                id="preview-img"
+                class="hidden max-w-full h-auto rounded-lg shadow-2xl transition-opacity duration-200"
+                alt="GitHub Badge Preview"
+              />
             </div>
 
-          </form>
-        </div>
-      </section>
+            <div
+              class="flex items-center justify-between text-[11px] text-zinc-500 pt-1"
+            >
+              <span>Server response cached for 10 minutes</span>
+              <span id="active-badge-endpoint" class="font-mono text-zinc-400"
+                >GET /api/stats</span
+              >
+            </div>
+          </div>
 
-    </div>
-  </main>
+          <!-- 3. Embed in README Code Block -->
+          <div
+            class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 shadow-sm space-y-4"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+            >
+              <div>
+                <h2
+                  class="text-xs font-semibold text-zinc-300 uppercase tracking-wider"
+                >
+                  Embed in README
+                </h2>
+                <p class="text-xs text-zinc-400 mt-0.5">
+                  Copy and paste into your GitHub profile markdown or website.
+                </p>
+              </div>
 
-  <!-- Clean Minimalist Footer -->
-  <footer class="border-t border-zinc-800/80 py-6 text-center text-xs text-zinc-500 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p>Git Badge Stats &bull; Distributed under the MIT License</p>
-      <div class="flex items-center gap-4">
-        <a href="/docs" class="hover:text-zinc-300 transition-colors">API Documentation</a>
-        <span>&bull;</span>
-        <a href="https://github.com/odutra-dev/GitBadgeStats" target="_blank" rel="noopener noreferrer" class="hover:text-zinc-300 transition-colors">GitHub Repository</a>
+              <!-- Production URL Toggle -->
+              <label
+                class="inline-flex items-center gap-2 cursor-pointer text-xs text-zinc-400 hover:text-zinc-300 select-none"
+              >
+                <input
+                  id="toggle-production-url"
+                  type="checkbox"
+                  checked
+                  class="rounded bg-zinc-950 border-zinc-700 text-purple-600 focus:ring-purple-500"
+                />
+                <span>Use Production URL</span>
+              </label>
+            </div>
+
+            <!-- Format Tabs -->
+            <div
+              class="inline-flex p-1 rounded-xl bg-zinc-950 border border-zinc-800/80 gap-1"
+            >
+              <button
+                type="button"
+                data-format="markdown"
+                class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-purple-600 text-white shadow-sm"
+              >
+                Markdown
+              </button>
+              <button
+                type="button"
+                data-format="html"
+                class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200"
+              >
+                HTML
+              </button>
+              <button
+                type="button"
+                data-format="link"
+                class="format-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-zinc-400 hover:text-zinc-200"
+              >
+                Direct Link
+              </button>
+            </div>
+
+            <!-- Code Box -->
+            <div class="relative">
+              <pre
+                class="bg-zinc-950 p-4 rounded-xl text-xs font-mono text-purple-300 border border-zinc-800/80 overflow-x-auto pr-24 whitespace-pre-wrap break-all min-h-[52px] flex items-center"
+              ><code id="code-output">https://git-badge-stats.vercel.app/api/stats?username=your-username</code></pre>
+              <button
+                id="btn-copy-code"
+                type="button"
+                class="absolute right-2.5 top-2.5 px-3 py-1.5 bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+              >
+                <svg
+                  id="copy-icon"
+                  class="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                <span id="copy-text">Copy</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT COLUMN: PARAMETER CONFIGURATION (5 cols) -->
+        <section class="lg:col-span-5 space-y-6">
+          <div
+            class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6 shadow-sm"
+          >
+            <div
+              class="flex items-center justify-between pb-4 border-b border-zinc-800/80 mb-5"
+            >
+              <div>
+                <h2 class="text-sm font-bold text-white tracking-tight">
+                  Query Parameters
+                </h2>
+                <p class="text-xs text-zinc-400 mt-0.5">
+                  Customize badge options and styling
+                </p>
+              </div>
+              <button
+                id="btn-reset-form"
+                type="button"
+                class="text-xs text-zinc-400 hover:text-rose-400 transition-colors"
+              >
+                Reset defaults
+              </button>
+            </div>
+
+            <form id="card-form" class="space-y-5" onsubmit="return false;">
+              <!-- Username (Required) -->
+              <div>
+                <label
+                  for="input-username"
+                  class="flex items-center justify-between text-xs font-semibold text-zinc-200 mb-1.5"
+                >
+                  <span class="flex items-center gap-1.5"
+                    ><span>GitHub Username</span
+                    ><span class="text-rose-400">*</span></span
+                  >
+                  <span
+                    class="text-[10px] font-medium text-rose-400 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded"
+                    >Required</span
+                  >
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    id="input-username"
+                    type="text"
+                    required
+                    placeholder="e.g. octocat"
+                    class="w-full pl-9 pr-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl text-sm font-medium text-white placeholder-zinc-500 outline-none transition"
+                  />
+                </div>
+                <p
+                  id="username-error"
+                  class="text-xs text-rose-400 mt-1.5 hidden"
+                >
+                  Username is required to generate the card.
+                </p>
+              </div>
+
+              <!-- Theme Selector -->
+              <div>
+                <label
+                  for="select-theme"
+                  class="block text-xs font-semibold text-zinc-200 mb-1.5"
+                  >Visual Theme</label
+                >
+                <select
+                  id="select-theme"
+                  class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl text-xs font-medium text-zinc-200 outline-none transition cursor-pointer"
+                >
+                  <option value="default">default</option>
+                </select>
+                <p class="text-[11px] text-zinc-500 mt-1">
+                  Over 70 built-in themes available.
+                </p>
+              </div>
+
+              <!-- CARD SPECIFIC SECTIONS -->
+              <!-- 1. Stats Card Specifics -->
+              <div
+                id="section-stats-options"
+                class="space-y-4 pt-3 border-t border-zinc-800/80"
+              >
+                <span
+                  class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  >Stats Settings</span
+                >
+                <label
+                  class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition"
+                >
+                  <div>
+                    <span class="text-xs font-semibold text-zinc-200 block"
+                      >Hide Dynamic Rank</span
+                    >
+                    <span class="text-[11px] text-zinc-400"
+                      >Omits the circular rank badge gauge
+                      (<code>hide_rank=true</code>)</span
+                    >
+                  </div>
+                  <input
+                    id="input-hide-rank"
+                    type="checkbox"
+                    class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500"
+                  />
+                </label>
+              </div>
+
+              <!-- 2. Streak Card Specifics -->
+              <div
+                id="section-streak-options"
+                class="space-y-4 pt-3 border-t border-zinc-800/80 hidden"
+              >
+                <span
+                  class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  >Streak Settings</span
+                >
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      for="select-locale"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Language (<code>locale</code>)</label
+                    >
+                    <select
+                      id="select-locale"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 outline-none transition cursor-pointer"
+                    >
+                      <option value="en">English (en)</option>
+                      <option value="pt">Portuguese (pt)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      for="input-timezone"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Timezone (<code>timezone</code>)</label
+                    >
+                    <input
+                      id="input-timezone"
+                      type="text"
+                      list="timezone-suggestions"
+                      placeholder="UTC"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                    />
+                    <datalist id="timezone-suggestions">
+                      <option value="UTC">UTC</option>
+                      <option value="America/Sao_Paulo">
+                        America/Sao_Paulo
+                      </option>
+                      <option value="America/New_York">America/New_York</option>
+                      <option value="Europe/London">Europe/London</option>
+                      <option value="Europe/Paris">Europe/Paris</option>
+                      <option value="Asia/Tokyo">Asia/Tokyo</option>
+                    </datalist>
+                  </div>
+                </div>
+                <label
+                  class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition"
+                >
+                  <div>
+                    <span class="text-xs font-semibold text-zinc-200 block"
+                      >Compact Mode</span
+                    >
+                    <span class="text-[11px] text-zinc-400"
+                      >Hides the 7-day weekly commit tracker
+                      (<code>hide_days=true</code>)</span
+                    >
+                  </div>
+                  <input
+                    id="input-hide-days"
+                    type="checkbox"
+                    class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500"
+                  />
+                </label>
+              </div>
+
+              <!-- 3. Languages Card Specifics -->
+              <div
+                id="section-languages-options"
+                class="space-y-4 pt-3 border-t border-zinc-800/80 hidden"
+              >
+                <span
+                  class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  >Languages Settings</span
+                >
+                <div>
+                  <label
+                    for="input-card-title"
+                    class="block text-xs font-semibold text-zinc-200 mb-1"
+                    >Custom Title (<code>card_title</code>)</label
+                  >
+                  <input
+                    id="input-card-title"
+                    type="text"
+                    placeholder="Most Used Languages"
+                    class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="input-hide-langs"
+                    class="block text-xs font-semibold text-zinc-200 mb-1"
+                    >Hide Languages (<code>hide</code>)</label
+                  >
+                  <input
+                    id="input-hide-langs"
+                    type="text"
+                    placeholder="e.g. html,css,jupyter notebook"
+                    class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                  />
+                  <span class="text-[10px] text-zinc-500">Comma-separated</span>
+                </div>
+                <div>
+                  <label
+                    for="input-exclude-repos"
+                    class="block text-xs font-semibold text-zinc-200 mb-1"
+                    >Exclude Repositories (<code>exclude_repo</code>)</label
+                  >
+                  <input
+                    id="input-exclude-repos"
+                    type="text"
+                    placeholder="e.g. dotfiles,legacy-project"
+                    class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                  />
+                  <span class="text-[10px] text-zinc-500">Comma-separated</span>
+                </div>
+              </div>
+
+              <!-- 4. Profile Card Specifics -->
+              <div
+                id="section-profile-options"
+                class="space-y-4 pt-3 border-t border-zinc-800/80 hidden"
+              >
+                <span
+                  class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  >Profile Settings</span
+                >
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      for="select-profile-locale"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Language (<code>locale</code>)</label
+                    >
+                    <select
+                      id="select-profile-locale"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 outline-none transition cursor-pointer"
+                    >
+                      <option value="en">English (en)</option>
+                      <option value="pt">Portuguese (pt)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      for="input-profile-title"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Custom Title (<code>card_title</code>)</label
+                    >
+                    <input
+                      id="input-profile-title"
+                      type="text"
+                      placeholder="The Octocat's GitHub Profile"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- ADVANCED COLOR CUSTOMIZATION (ACCORDION) -->
+              <div class="pt-3 border-t border-zinc-800/80">
+                <button
+                  id="btn-toggle-colors"
+                  type="button"
+                  class="w-full flex items-center justify-between text-xs font-semibold text-zinc-400 hover:text-zinc-200 transition py-1"
+                >
+                  <span>Custom Color Overrides</span>
+                  <svg
+                    id="icon-colors-arrow"
+                    class="w-4 h-4 transform transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                <div id="container-colors" class="hidden mt-3 space-y-3">
+                  <p class="text-[11px] text-zinc-500">
+                    Provide hex values without
+                    <span class="text-purple-400 font-mono">#</span> (e.g.
+                    <span class="text-purple-400 font-mono">7928ca</span>) or
+                    pick interactively.
+                  </p>
+
+                  <!-- title_color -->
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="picker-title-color"
+                      value="#ffffff"
+                      title="Pick title color"
+                    />
+                    <div class="flex-1">
+                      <label
+                        for="input-title-color"
+                        class="block text-[11px] text-zinc-400"
+                        >Title Color (<code>title_color</code>)</label
+                      >
+                      <input
+                        id="input-title-color"
+                        type="text"
+                        placeholder="e.g. 7928ca"
+                        maxlength="6"
+                        class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- text_color -->
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="picker-text-color"
+                      value="#ffffff"
+                      title="Pick text color"
+                    />
+                    <div class="flex-1">
+                      <label
+                        for="input-text-color"
+                        class="block text-[11px] text-zinc-400"
+                        >Text Color (<code>text_color</code>)</label
+                      >
+                      <input
+                        id="input-text-color"
+                        type="text"
+                        placeholder="e.g. e2e8f0"
+                        maxlength="6"
+                        class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- icon_color -->
+                  <div id="row-icon-color" class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="picker-icon-color"
+                      value="#ffffff"
+                      title="Pick icon color"
+                    />
+                    <div class="flex-1">
+                      <label
+                        for="input-icon-color"
+                        class="block text-[11px] text-zinc-400"
+                        >Icon Color (<code>icon_color</code>)</label
+                      >
+                      <input
+                        id="input-icon-color"
+                        type="text"
+                        placeholder="e.g. f59e0b"
+                        maxlength="6"
+                        class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- bg_color -->
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="picker-bg-color"
+                      value="#0d1117"
+                      title="Pick background color"
+                    />
+                    <div class="flex-1">
+                      <label
+                        for="input-bg-color"
+                        class="block text-[11px] text-zinc-400"
+                        >Background (<code>bg_color</code>)</label
+                      >
+                      <input
+                        id="input-bg-color"
+                        type="text"
+                        placeholder="e.g. 0d1117 or 35,4158d0,c850c0"
+                        class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- border_color -->
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="picker-border-color"
+                      value="#30363d"
+                      title="Pick border color"
+                    />
+                    <div class="flex-1">
+                      <label
+                        for="input-border-color"
+                        class="block text-[11px] text-zinc-400"
+                        >Border Color (<code>border_color</code>)</label
+                      >
+                      <input
+                        id="input-border-color"
+                        type="text"
+                        placeholder="e.g. 30363d"
+                        maxlength="6"
+                        class="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-lg text-xs font-mono text-zinc-100 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
       </div>
-    </div>
-  </footer>
+    </main>
 
-  <script src="/static/app.js"></script>
-</body>
+    <!-- Clean Minimalist Footer -->
+    <footer
+      class="border-t border-zinc-800/80 py-6 text-center text-xs text-zinc-500 mt-auto"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3"
+      >
+        <p>Git Badge Stats &bull; Distributed under the MIT License</p>
+        <div class="flex items-center gap-4">
+          <a href="/docs" class="hover:text-zinc-300 transition-colors"
+            >API Documentation</a
+          >
+          <span>&bull;</span>
+          <a
+            href="https://github.com/odutra-dev/GitBadgeStats"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-zinc-300 transition-colors"
+            >GitHub Repository</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+  </body>
 </html>

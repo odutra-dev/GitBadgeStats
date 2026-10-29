@@ -98,3 +98,100 @@ def get_translations(locale: str) -> LocaleTranslations:
         raise ValueError(
             f"Unsupported locale '{locale}'. Supported locales: {supported}"
         ) from exc
+        
+
+
+class ProfileTranslations(TypedDict):
+    """Translation keys required by the profile card."""
+
+    card_title: str
+    followers_label: str
+    following_label: str
+    repositories_label: str
+    stars_label: str
+    account_age_label: str
+    year_one: str
+    year_other: str
+    month_one: str
+    month_other: str
+    age_separator: str
+
+
+PROFILE_TRANSLATIONS: dict[str, ProfileTranslations] = {
+    "en": {
+        "card_title": "{name}'s GitHub Profile",
+        "followers_label": "Followers",
+        "following_label": "Following",
+        "repositories_label": "Repositories",
+        "stars_label": "Stars",
+        "account_age_label": "Account age",
+        "year_one": "year",
+        "year_other": "years",
+        "month_one": "month",
+        "month_other": "months",
+        "age_separator": ", ",
+    },
+    "pt": {
+        "card_title": "Perfil GitHub de {name}",
+        "followers_label": "Seguidores",
+        "following_label": "Seguindo",
+        "repositories_label": "Repositórios",
+        "stars_label": "Estrelas",
+        "account_age_label": "Tempo de conta",
+        "year_one": "ano",
+        "year_other": "anos",
+        "month_one": "mês",
+        "month_other": "meses",
+        "age_separator": " e ",
+    },
+    "es": {
+        "card_title": "Perfil de GitHub de {name}",
+        "followers_label": "Seguidores",
+        "following_label": "Siguiendo",
+        "repositories_label": "Repositorios",
+        "stars_label": "Estrellas",
+        "account_age_label": "Antigüedad",
+        "year_one": "año",
+        "year_other": "años",
+        "month_one": "mes",
+        "month_other": "meses",
+        "age_separator": " y ",
+    },
+    "fr": {
+        "card_title": "Profil GitHub de {name}",
+        "followers_label": "Abonnés",
+        "following_label": "Abonnements",
+        "repositories_label": "Dépôts",
+        "stars_label": "Étoiles",
+        "account_age_label": "Ancienneté",
+        "year_one": "an",
+        "year_other": "ans",
+        "month_one": "mois",
+        "month_other": "mois",
+        "age_separator": " et ",
+    },
+    "de": {
+        "card_title": "GitHub-Profil von {name}",
+        "followers_label": "Follower",
+        "following_label": "Folge ich",
+        "repositories_label": "Repositories",
+        "stars_label": "Sterne",
+        "account_age_label": "Kontoalter",
+        "year_one": "Jahr",
+        "year_other": "Jahre",
+        "month_one": "Monat",
+        "month_other": "Monate",
+        "age_separator": " und ",
+    },
+}
+
+
+def get_profile_translations(locale: str) -> ProfileTranslations:
+    """Return profile card translations for a supported locale."""
+    try:
+        return PROFILE_TRANSLATIONS[locale]
+    except KeyError as exc:
+        supported = ", ".join(PROFILE_TRANSLATIONS)
+        raise ValueError(
+            f"Unsupported locale '{locale}'. Supported locales: {supported}"
+        ) from exc

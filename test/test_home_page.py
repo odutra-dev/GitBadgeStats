@@ -142,3 +142,87 @@ def test_home_page_missing_file_returns_404():
         response = client.get("/")
         assert response.status_code == 404
         assert response.json()["detail"] == "Homepage not found"
+
+def test_home_page_profile_card_option_and_settings():
+    """Validate the profile card tab and its settings section."""
+    response = client.get("/")
+    html = response.text
+
+    assert 'data-card="profile"' in html
+    assert "GitHub Profile" in html
+    assert 'id="section-profile-options"' in html
+    assert 'id="select-profile-locale"' in html
+    assert 'id="input-profile-title"' in html
+
+
+def test_home_page_script_knows_the_profile_route():
+    """Validate that the generator script maps the profile card to its API route."""
+    js_res = client.get("/static/app.js")
+
+    assert js_res.status_code == 200
+    assert "'/api/profile'" in js_res.text
+    
+
+def test_home_page_script_maps_profile_card_metadata():
+    """The profile card must have its route, title, and endpoint label."""
+    response = client.get("/static/app.js")
+
+    assert response.status_code == 200
+    js = response.text
+
+    assert "profile: '/api/profile'" in js
+    assert "profile: 'GitHub Profile'" in js
+    assert "profile: 'GET /api/profile'" in js
+
+
+def test_home_page_script_reads_profile_settings():
+    """The script must reference the profile-specific form controls."""
+    response = client.get("/static/app.js")
+    js = response.text
+
+    assert "section-profile-options" in js
+    assert "select-profile-locale" in js
+    assert "input-profile-title" in js
+
+
+def test_home_page_script_toggles_profile_settings():
+    """Only the active card's specific settings section should be visible."""
+    response = client.get("/static/app.js")
+    js = response.text
+
+    assert "sectionProfileOptions.classList.toggle" in js
+    assert "cardType !== 'profile'" in js
+
+
+def test_home_page_script_resets_profile_settings():
+    """Reset must restore the profile locale and clear the custom title."""
+    response = client.get("/static/app.js")
+    js = response.text
+
+    assert "selectProfileLocale.value = 'en'" in js
+    assert "inputProfileTitle.value = ''" in js
+
+
+def test_home_page_script_registers_profile_listeners():
+    """Changes to profile controls must trigger an update."""
+    response = client.get("/static/app.js")
+    js = response.text
+
+    assert (
+        "selectProfileLocale.addEventListener"
+        "('change', handleImmediateChange)"
+    ) in js
+
+    assert (
+        "inputProfileTitle.addEventListener"
+        "('input', handleInputDebounced)"
+    ) in js
+
+
+def test_home_page_profile_icon_color_remains_enabled():
+    """The icon color override must remain available for the profile card."""
+    response = client.get("/static/app.js")
+    js = response.text
+
+    assert "if (activeCard !== 'languages')" in js
+    assert "params.set('icon_color', iconColor)" in js
