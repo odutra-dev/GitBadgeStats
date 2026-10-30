@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from src.common.themes import themes
+from src.common.locales import SUPPORTED_LOCALES
 from src.renderers.languages_card import generate_languages_svg
 from src.renderers.profile_card import generate_profile_svg
 from src.renderers.stats_card import generate_svg
@@ -26,8 +27,6 @@ from src.services.github_service import (
 )
 
 load_dotenv()
-
-SUPPORTED_LOCALES = ("en", "pt")
 
 def _validate_theme(theme: str) -> None:
     if theme not in themes:
@@ -150,6 +149,7 @@ async def get_locales():
 async def get_repo_stats(
     username: str,
     theme: str = "default",
+    locale: str = "en",
     hide_rank: bool = False,
     title_color: Optional[str] = None,
     text_color: Optional[str] = None,
@@ -159,12 +159,14 @@ async def get_repo_stats(
 ):
     """Generate dynamic SVG badge with general user GitHub statistics and rank."""
     _validate_theme(theme)
+    _validate_locale(locale)
 
     stats: dict[Any, Any] = await fetch_github_stats(username)
 
     svg_content: str = generate_svg(
         stats,
         theme_name=theme,
+        locale=locale,
         hide_rank=hide_rank,
         title_color_override=title_color,
         text_color_override=text_color,
@@ -224,6 +226,7 @@ async def get_streak_stats(
 async def get_top_languages(
     username: str,
     theme: str = "default",
+    locale: str = "en",
     hide: Optional[str] = None,
     exclude_repo: Optional[str] = None,
     title_color: Optional[str] = None,
@@ -232,9 +235,10 @@ async def get_top_languages(
     border_color: Optional[str] = None,
     card_title: Optional[str] = None,
 ):
-    _validate_theme(theme)
-
     """Generate dynamic SVG badge displaying user's top 5 most used languages."""
+    _validate_theme(theme)
+    _validate_locale(locale)
+
     langs_data: dict[Any, Any] = await fetch_github_top_languages(
         username=username,
         exclude_languages=hide,
@@ -245,6 +249,7 @@ async def get_top_languages(
     svg_content: str = generate_languages_svg(
         langs_data,
         theme_name=theme,
+        locale=locale,
         title_color_override=title_color,
         text_color_override=text_color,
         bg_color_override=bg_color,

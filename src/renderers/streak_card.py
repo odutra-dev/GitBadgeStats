@@ -8,7 +8,13 @@ from typing import Optional
 
 from src.common.themes import themes
 from src.common.icons import icons, DUO_FLAME_OUTER_PATH, DUO_FLAME_INNER_PATH
-from src.common.utils import escape_text, format_color, parse_background
+from src.common.utils import (
+    escape_text,
+    format_color,
+    parse_background,
+    sanitize_color,
+    sanitize_background,
+)
 from src.common.locales import get_translations
 
 
@@ -18,6 +24,7 @@ class StreakCardRenderer:
     CARD_WIDTH = 495
     NORMAL_HEIGHT = 235
     COMPACT_HEIGHT = 145
+    CARD_RADIUS = 4.5
 
     def __init__(
         self,
@@ -38,15 +45,15 @@ class StreakCardRenderer:
 
         # Theme resolution
         theme = themes.get(theme_name, themes["default"])
-        self.title_color = format_color(title_color_override or theme.get("title_color", "2f80ed"))
-        self.text_color = format_color(text_color_override or theme.get("text_color", "333333"))
-        self.icon_color = format_color(icon_color_override or theme.get("icon_color", "4c71f2"))
+        self.title_color = format_color(sanitize_color(title_color_override) or theme.get("title_color", "2f80ed"))
+        self.text_color = format_color(sanitize_color(text_color_override) or theme.get("text_color", "333333"))
+        self.icon_color = format_color(sanitize_color(icon_color_override) or theme.get("icon_color", "4c71f2"))
 
-        raw_bg = bg_color_override or theme.get("bg_color", "fffefe")
+        raw_bg = sanitize_background(bg_color_override) or theme.get("bg_color", "fffefe")
         self.bg_defs, self.bg_fill = parse_background(raw_bg)
         self.dark_mode = self._is_dark_background(raw_bg)
 
-        raw_border = border_color_override or theme.get("border_color")
+        raw_border = sanitize_color(border_color_override) or theme.get("border_color")
         self.border_color = format_color(raw_border) if raw_border else self.text_color
 
         # Stats extraction
@@ -279,7 +286,7 @@ class StreakCardRenderer:
         </style>
         
         <!-- Background with rounded corners -->
-        <rect width="{card_width - 1}" height="{card_height - 1}" x="0.5" y="0.5" rx="10" fill="{self.bg_fill}" stroke="{self.border_color}"/>
+        <rect width="{card_width - 1}" height="{card_height - 1}" x="0.5" y="0.5" rx="{self.CARD_RADIUS}" fill="{self.bg_fill}" stroke="{self.border_color}"/>
         
         <!-- Header & Subtitle (Positioned at y=31 and y=48, well above the middle row and weekly tracker) -->
         <text x="28" y="31" class="header">{card_title}</text>

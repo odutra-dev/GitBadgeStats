@@ -6,6 +6,7 @@ from datetime import date
 
 import pytest
 
+from src.common.icons import icons
 from src.common.locales import PROFILE_TRANSLATIONS
 from src.renderers.profile_card import generate_profile_svg
 
@@ -50,7 +51,10 @@ def test_renders_every_metric() -> None:
 
 
 def test_renders_one_icon_per_metric() -> None:
-    assert render().count('viewBox="0 0 16 16"') == 5
+    svg = render()
+    assert svg.count('viewBox="0 0 16 16"') == 5
+    for key in ("followers", "following", "repo", "star", "calendar"):
+        assert icons[key] in svg
 
 
 def test_default_title_uses_the_user_name() -> None:

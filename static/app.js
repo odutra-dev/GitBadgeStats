@@ -75,6 +75,7 @@
   const rowIconColor = document.getElementById("row-icon-color");
 
   // Stats inputs
+  const selectStatsLocale = document.getElementById("select-stats-locale");
   const inputHideRank = document.getElementById("input-hide-rank");
 
   // Streak inputs
@@ -83,6 +84,7 @@
   const inputHideDays = document.getElementById("input-hide-days");
 
   // Languages inputs
+  const selectLangsLocale = document.getElementById("select-langs-locale");
   const inputCardTitle = document.getElementById("input-card-title");
   const inputHideLangs = document.getElementById("input-hide-langs");
   const inputExcludeRepos = document.getElementById("input-exclude-repos");
@@ -214,6 +216,12 @@
 
     // Card Specific
     if (activeCard === "stats") {
+      const statsLocale = selectStatsLocale ? selectStatsLocale.value : "en";
+
+      if (statsLocale && statsLocale !== "en") {
+        params.set("locale", statsLocale);
+      }
+
       if (inputHideRank.checked) {
         params.set("hide_rank", "true");
       }
@@ -234,6 +242,12 @@
         params.set("hide_days", "true");
       }
     } else if (activeCard === "languages") {
+      const langsLocale = selectLangsLocale ? selectLangsLocale.value : "en";
+
+      if (langsLocale && langsLocale !== "en") {
+        params.set("locale", langsLocale);
+      }
+
       const cardTitle = inputCardTitle.value.trim();
 
       if (cardTitle) {
@@ -571,6 +585,7 @@
     selectTheme.value = "default";
 
     // Stats
+    if (selectStatsLocale) selectStatsLocale.value = "en";
     inputHideRank.checked = false;
 
     // Streak
@@ -579,6 +594,7 @@
     inputHideDays.checked = false;
 
     // Languages
+    if (selectLangsLocale) selectLangsLocale.value = "en";
     inputCardTitle.value = "";
     inputHideLangs.value = "";
     inputExcludeRepos.value = "";
@@ -652,7 +668,13 @@
   });
 
   selectTheme.addEventListener("change", handleImmediateChange);
+  if (selectStatsLocale) {
+    selectStatsLocale.addEventListener("change", handleImmediateChange);
+  }
   selectLocale.addEventListener("change", handleImmediateChange);
+  if (selectLangsLocale) {
+    selectLangsLocale.addEventListener("change", handleImmediateChange);
+  }
   selectProfileLocale.addEventListener('change', handleImmediateChange);
 
   inputHideRank.addEventListener("change", handleImmediateChange);
