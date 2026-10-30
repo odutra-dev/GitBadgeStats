@@ -8,6 +8,7 @@ import math
 from typing import Optional
 from src.common.themes import themes
 from src.common.icons import icons
+from src.common.locales import get_stats_translations
 from src.domain.rank import calculate_rank
 from src.common.utils import format_color, parse_background, escape_text
 
@@ -19,6 +20,7 @@ class StatsCardRenderer:
         self,
         stats: dict,
         theme_name: str = "default",
+        locale: str = "en",
         hide_rank: bool = False,
         title_color_override: Optional[str] = None,
         text_color_override: Optional[str] = None,
@@ -27,6 +29,8 @@ class StatsCardRenderer:
         border_color_override: Optional[str] = None,
     ):
         self.stats = stats
+        self.locale = locale
+        self.translations = get_stats_translations(locale)
         self.hide_rank = hide_rank
 
         theme = themes.get(theme_name, themes["default"])
@@ -63,7 +67,7 @@ class StatsCardRenderer:
 
         return f"""
         <g transform="translate(0, 0)">
-            <text x="320" y="75" class="rank-title">GitHub Rank</text>
+            <text x="320" y="75" class="rank-title">{escape_text(self.translations['rank_title'])}</text>
             <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-bg" />
             <circle cx="320" cy="125" r="{circle_radius}" class="rank-circle-progress"
                     stroke-dasharray="{circumference}"
@@ -76,6 +80,7 @@ class StatsCardRenderer:
         """Render complete SVG stats card."""
         card_width = 330 if self.hide_rank else 400
         rank_svg = self._render_rank()
+        card_title = self.translations["card_title"].format(name=self.display_name)
 
         return f"""<svg width="{card_width}" height="230" viewBox="0 0 {card_width} 230" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -95,22 +100,22 @@ class StatsCardRenderer:
         
         <rect width="{card_width - 1}" height="229" x="0.5" y="0.5" rx="4.5" fill="{self.bg_fill}" stroke="{self.border_color}"/>
         
-        <text x="25" y="35" class="header">{self.display_name}'s GitHub Stats</text>
+        <text x="25" y="35" class="header">{card_title}</text>
         
         {self._render_icon("commits", 61)}
-        <text x="50" y="75" class="stat">Total Commits: <tspan class="bold" x="190">{self.stats.get('total_commits', 0)}</tspan></text>
+        <text x="50" y="75" class="stat">{escape_text(self.translations["commits_label"])}: <tspan class="bold" x="190">{self.stats.get('total_commits', 0)}</tspan></text>
         
         {self._render_icon("star", 91)}
-        <text x="50" y="105" class="stat">Stars Received: <tspan class="bold" x="190">{self.stats.get('stars', 0)}</tspan></text>
+        <text x="50" y="105" class="stat">{escape_text(self.translations["stars_label"])}: <tspan class="bold" x="190">{self.stats.get('stars', 0)}</tspan></text>
         
         {self._render_icon("prs", 121)}
-        <text x="50" y="135" class="stat">Total PRs: <tspan class="bold" x="190">{self.stats.get('total_prs', 0)}</tspan></text>
+        <text x="50" y="135" class="stat">{escape_text(self.translations["prs_label"])}: <tspan class="bold" x="190">{self.stats.get('total_prs', 0)}</tspan></text>
         
         {self._render_icon("issues", 151)}
-        <text x="50" y="165" class="stat">Total Issues: <tspan class="bold" x="190">{self.stats.get('total_issues', 0)}</tspan></text>
+        <text x="50" y="165" class="stat">{escape_text(self.translations["issues_label"])}: <tspan class="bold" x="190">{self.stats.get('total_issues', 0)}</tspan></text>
         
         {self._render_icon("contribs", 181)}
-        <text x="50" y="195" class="stat">Contributed to: <tspan class="bold" x="190">{self.stats.get('contributed_to', 0)}</tspan></text>
+        <text x="50" y="195" class="stat">{escape_text(self.translations["contribs_label"])}: <tspan class="bold" x="190">{self.stats.get('contributed_to', 0)}</tspan></text>
         
         {rank_svg}
     </svg>"""
@@ -119,6 +124,7 @@ class StatsCardRenderer:
 def generate_svg(
     stats: dict,
     theme_name: str = "default",
+    locale: str = "en",
     hide_rank: bool = False,
     title_color_override: Optional[str] = None,
     text_color_override: Optional[str] = None,
@@ -126,10 +132,11 @@ def generate_svg(
     bg_color_override: Optional[str] = None,
     border_color_override: Optional[str] = None,
 ) -> str:
-    """Generate SVG stats card based on user stats, theme, icons, and dynamic rank."""
+    """Generate SVG stats card based on user stats, theme, icons, dynamic rank, and locale."""
     renderer = StatsCardRenderer(
         stats=stats,
         theme_name=theme_name,
+        locale=locale,
         hide_rank=hide_rank,
         title_color_override=title_color_override,
         text_color_override=text_color_override,

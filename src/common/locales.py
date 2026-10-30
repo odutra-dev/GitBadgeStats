@@ -195,3 +195,117 @@ def get_profile_translations(locale: str) -> ProfileTranslations:
         raise ValueError(
             f"Unsupported locale '{locale}'. Supported locales: {supported}"
         ) from exc
+
+
+class StatsTranslations(TypedDict):
+    """Translation keys required by the stats card."""
+
+    card_title: str
+    commits_label: str
+    stars_label: str
+    prs_label: str
+    issues_label: str
+    contribs_label: str
+    rank_title: str
+
+
+STATS_TRANSLATIONS: dict[str, StatsTranslations] = {
+    "en": {
+        "card_title": "{name}'s GitHub Stats",
+        "commits_label": "Total Commits",
+        "stars_label": "Stars Received",
+        "prs_label": "Total PRs",
+        "issues_label": "Total Issues",
+        "contribs_label": "Contributed to",
+        "rank_title": "GitHub Rank",
+    },
+    "pt": {
+        "card_title": "Estatísticas do GitHub de {name}",
+        "commits_label": "Total de commits",
+        "stars_label": "Estrelas recebidas",
+        "prs_label": "Total de PRs",
+        "issues_label": "Total de issues",
+        "contribs_label": "Contribuiu para",
+        "rank_title": "Rank GitHub",
+    },
+    "es": {
+        "card_title": "Estadísticas de GitHub de {name}",
+        "commits_label": "Commits totales",
+        "stars_label": "Estrellas recibidas",
+        "prs_label": "PRs totales",
+        "issues_label": "Issues totales",
+        "contribs_label": "Contribuido a",
+        "rank_title": "Rank GitHub",
+    },
+    "fr": {
+        "card_title": "Statistiques GitHub de {name}",
+        "commits_label": "Commits au total",
+        "stars_label": "Étoiles reçues",
+        "prs_label": "Total des PRs",
+        "issues_label": "Total des issues",
+        "contribs_label": "A contribué à",
+        "rank_title": "Rang GitHub",
+    },
+    "de": {
+        "card_title": "GitHub-Statistiken von {name}",
+        "commits_label": "Commits insgesamt",
+        "stars_label": "Erhaltene Sterne",
+        "prs_label": "PRs insgesamt",
+        "issues_label": "Issues insgesamt",
+        "contribs_label": "Beigetragen zu",
+        "rank_title": "GitHub-Rang",
+    },
+}
+
+
+def get_stats_translations(locale: str) -> StatsTranslations:
+    """Return stats card translations for a supported locale."""
+    try:
+        return STATS_TRANSLATIONS[locale]
+    except KeyError as exc:
+        supported = ", ".join(STATS_TRANSLATIONS)
+        raise ValueError(
+            f"Unsupported locale '{locale}'. Supported locales: {supported}"
+        ) from exc
+
+
+class LanguagesTranslations(TypedDict):
+    """Translation keys required by the top languages card."""
+
+    card_title: str
+    empty_text: str
+
+
+LANGUAGES_TRANSLATIONS: dict[str, LanguagesTranslations] = {
+    "en": {
+        "card_title": "Most Used Languages",
+        "empty_text": "No languages found",
+    },
+    "pt": {
+        "card_title": "Linguagens Mais Usadas",
+        "empty_text": "Nenhuma linguagem encontrada",
+    },
+    "es": {
+        "card_title": "Lenguajes Más Usados",
+        "empty_text": "No se encontraron lenguajes",
+    },
+    "fr": {
+        "card_title": "Langages les Plus Utilisés",
+        "empty_text": "Aucun langage trouvé",
+    },
+    "de": {
+        "card_title": "Meistgenutzte Sprachen",
+        "empty_text": "Keine Sprachen gefunden",
+    },
+}
+
+
+def get_languages_translations(locale: str) -> LanguagesTranslations:
+    """Return top languages card translations for a supported locale."""
+    try:
+        return LANGUAGES_TRANSLATIONS[locale]
+    except KeyError as exc:
+        supported = ", ".join(LANGUAGES_TRANSLATIONS)
+        raise ValueError(
+            f"Unsupported locale '{locale}'. Supported locales: {supported}"
+        ) from exc

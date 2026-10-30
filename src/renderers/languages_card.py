@@ -6,6 +6,7 @@ the top languages badge SVG with a proportional distribution bar and 2-column la
 
 from typing import Optional
 from src.common.themes import themes
+from src.common.locales import get_languages_translations
 from src.common.utils import format_color, parse_background, escape_text
 
 
@@ -23,6 +24,7 @@ class LanguagesCardRenderer:
         self,
         data: dict,
         theme_name: str = "default",
+        locale: str = "en",
         title_color_override: Optional[str] = None,
         text_color_override: Optional[str] = None,
         bg_color_override: Optional[str] = None,
@@ -33,6 +35,8 @@ class LanguagesCardRenderer:
         self.data = data
         self.languages = data.get("languages", [])
         self.name = escape_text(data.get("name", "User"))
+        self.locale = locale
+        self.translations = get_languages_translations(locale)
         self.hide_title = hide_title
         self.custom_title = custom_title
 
@@ -78,7 +82,7 @@ class LanguagesCardRenderer:
     def _render_languages_list(self) -> str:
         """Render 2-column language items with colored dots and percentages."""
         if not self.languages:
-            return f'<text x="25" y="90" font-family="\'Segoe UI\', Ubuntu, Sans-Serif" font-size="12" fill="{self.text_color}" opacity="0.6">No languages found</text>'
+            return f'<text x="25" y="90" font-family="\'Segoe UI\', Ubuntu, Sans-Serif" font-size="12" fill="{self.text_color}" opacity="0.6">{escape_text(self.translations["empty_text"])}</text>'
 
         items = []
         for i, lang in enumerate(self.languages):
@@ -106,7 +110,7 @@ class LanguagesCardRenderer:
 
     def render(self) -> str:
         """Render complete SVG Top Languages card."""
-        card_title = escape_text(self.custom_title) if self.custom_title else "Most Used Languages"
+        card_title = escape_text(self.custom_title) if self.custom_title else escape_text(self.translations["card_title"])
         progress_bar_svg = self._render_progress_bar()
         languages_list_svg = self._render_languages_list()
 
@@ -134,6 +138,7 @@ class LanguagesCardRenderer:
 def generate_languages_svg(
     data: dict,
     theme_name: str = "default",
+    locale: str = "en",
     title_color_override: Optional[str] = None,
     text_color_override: Optional[str] = None,
     bg_color_override: Optional[str] = None,
@@ -145,6 +150,7 @@ def generate_languages_svg(
     renderer = LanguagesCardRenderer(
         data=data,
         theme_name=theme_name,
+        locale=locale,
         title_color_override=title_color_override,
         text_color_override=text_color_override,
         bg_color_override=bg_color_override,
