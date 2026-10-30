@@ -452,6 +452,11 @@ def test_generate_streak_svg_validity_and_themes() -> None:
     root_compact: ET.Element = ET.fromstring(svg_compact)
 
     assert int(root_compact.attrib["height"]) == 145
+    assert 'rx="4.5"' in svg
+
+    evil_svg = generate_streak_svg(stats, border_color_override="red;}</style><script>alert(1)</script><style>")
+    assert "<script>" not in evil_svg
+    assert "alert(1)" not in evil_svg
 
 
 def test_streak_message_does_not_overlap_weekly_tracker() -> None:

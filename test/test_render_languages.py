@@ -92,3 +92,15 @@ def test_generate_languages_svg_locales():
 
     with pytest.raises(ValueError, match="Unsupported locale 'it'"):
         generate_languages_svg({"name": "User", "languages": []}, locale="it")
+
+
+def test_generate_languages_svg_border_and_color_sanitization():
+    """Verify card border radius and color sanitization."""
+    data = {"name": "User", "languages": []}
+    svg = generate_languages_svg(data, border_color_override="abcdef")
+    assert 'rx="4.5"' in svg
+    assert 'stroke="#abcdef"' in svg
+
+    evil_svg = generate_languages_svg(data, border_color_override="red;}</style><script>alert(1)</script><style>")
+    assert "<script>" not in evil_svg
+    assert "alert(1)" not in evil_svg

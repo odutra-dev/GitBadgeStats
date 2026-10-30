@@ -21,6 +21,7 @@ class ErrorCardRenderer:
 
     CARD_WIDTH = 400
     CARD_HEIGHT = 100
+    CARD_RADIUS = 4.5
     MAX_TITLE_CHARS = 34
     MAX_HINT_CHARS = 52
 
@@ -80,7 +81,7 @@ class ErrorCardRenderer:
             .hint {{ font: 400 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.text_color}; fill-opacity: 0.8; }}
         </style>
 
-        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="4.5" fill="{self.bg_fill}" stroke="{self.border_color}"/>
+        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="{self.CARD_RADIUS}" fill="{self.bg_fill}" stroke="{self.border_color}"/>
 
         {self._render_icon()}
 

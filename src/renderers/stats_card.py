@@ -10,11 +10,22 @@ from src.common.themes import themes
 from src.common.icons import icons
 from src.common.locales import get_stats_translations
 from src.domain.rank import calculate_rank
-from src.common.utils import format_color, parse_background, escape_text
+from src.common.utils import (
+    format_color,
+    parse_background,
+    escape_text,
+    sanitize_color,
+    sanitize_background,
+)
 
 
 class StatsCardRenderer:
     """Renderer for general GitHub profile statistics SVG card."""
+
+    CARD_WIDTH = 400
+    COMPACT_WIDTH = 330
+    CARD_HEIGHT = 230
+    CARD_RADIUS = 4.5
 
     def __init__(
         self,
@@ -34,14 +45,14 @@ class StatsCardRenderer:
         self.hide_rank = hide_rank
 
         theme = themes.get(theme_name, themes["default"])
-        self.title_color = format_color(title_color_override or theme.get("title_color", "2f80ed"))
-        self.text_color = format_color(text_color_override or theme.get("text_color", "333333"))
-        self.icon_color = format_color(icon_color_override or theme.get("icon_color", "4c71f2"))
+        self.title_color = format_color(sanitize_color(title_color_override) or theme.get("title_color", "2f80ed"))
+        self.text_color = format_color(sanitize_color(text_color_override) or theme.get("text_color", "333333"))
+        self.icon_color = format_color(sanitize_color(icon_color_override) or theme.get("icon_color", "4c71f2"))
 
-        raw_bg = bg_color_override or theme.get("bg_color", "fffefe")
+        raw_bg = sanitize_background(bg_color_override) or theme.get("bg_color", "fffefe")
         self.bg_defs, self.bg_fill = parse_background(raw_bg)
 
-        raw_border = border_color_override or theme.get("border_color")
+        raw_border = sanitize_color(border_color_override) or theme.get("border_color")
         self.border_color = format_color(raw_border) if raw_border else self.text_color
         self.display_name = escape_text(stats.get("name", "User"))
 
@@ -78,11 +89,11 @@ class StatsCardRenderer:
 
     def render(self) -> str:
         """Render complete SVG stats card."""
-        card_width = 330 if self.hide_rank else 400
+        card_width = self.COMPACT_WIDTH if self.hide_rank else self.CARD_WIDTH
         rank_svg = self._render_rank()
         card_title = self.translations["card_title"].format(name=self.display_name)
 
-        return f"""<svg width="{card_width}" height="230" viewBox="0 0 {card_width} 230" xmlns="http://www.w3.org/2000/svg">
+        return f"""<svg width="{card_width}" height="{self.CARD_HEIGHT}" viewBox="0 0 {card_width} {self.CARD_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
         <defs>
             {self.bg_defs}
         </defs>
@@ -98,7 +109,7 @@ class StatsCardRenderer:
             .rank-circle-progress {{ fill: none; stroke: {self.icon_color}; stroke-width: 4.5; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 320px 125px; }}
         </style>
         
-        <rect width="{card_width - 1}" height="229" x="0.5" y="0.5" rx="4.5" fill="{self.bg_fill}" stroke="{self.border_color}"/>
+        <rect width="{card_width - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="{self.CARD_RADIUS}" fill="{self.bg_fill}" stroke="{self.border_color}"/>
         
         <text x="25" y="35" class="header">{card_title}</text>
         

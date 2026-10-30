@@ -29,6 +29,7 @@ class ProfileCardRenderer:
 
     CARD_WIDTH = 400
     CARD_HEIGHT = 230
+    CARD_RADIUS = 4.5
     MAX_TITLE_CHARS = 34
     MIN_NAME_CHARS = 8
     EMPTY_VALUE = "—"
@@ -129,7 +130,7 @@ class ProfileCardRenderer:
             .bold {{ font-weight: bold; }}
         </style>
 
-        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="4.5" fill="{self.bg_fill}" stroke="{self.border_color}"/>
+        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="{self.CARD_RADIUS}" fill="{self.bg_fill}" stroke="{self.border_color}"/>
 
         <text x="25" y="35" class="header">{title}</text>
         {rows}

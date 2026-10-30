@@ -75,3 +75,20 @@ def test_generate_stats_svg_icons():
     svg = generate_svg(stats)
     for key in ("commits", "star", "prs", "issues", "contribs"):
         assert icons[key] in svg
+
+
+def test_generate_stats_svg_border_and_color_sanitization():
+    """Verify card border radius and color sanitization."""
+    stats = {"name": "Octocat"}
+    svg = generate_svg(
+        stats,
+        border_color_override="123456",
+        title_color_override="abcdef",
+    )
+    assert 'rx="4.5"' in svg
+    assert 'stroke="#123456"' in svg
+    assert "fill: #abcdef" in svg
+
+    evil_svg = generate_svg(stats, border_color_override="red;}</style><script>alert(1)</script><style>")
+    assert "<script>" not in evil_svg
+    assert "alert(1)" not in evil_svg

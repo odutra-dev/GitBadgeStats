@@ -7,7 +7,13 @@ the top languages badge SVG with a proportional distribution bar and 2-column la
 from typing import Optional
 from src.common.themes import themes
 from src.common.locales import get_languages_translations
-from src.common.utils import format_color, parse_background, escape_text
+from src.common.utils import (
+    format_color,
+    parse_background,
+    escape_text,
+    sanitize_color,
+    sanitize_background,
+)
 
 
 class LanguagesCardRenderer:
@@ -15,6 +21,7 @@ class LanguagesCardRenderer:
 
     CARD_WIDTH = 340
     CARD_HEIGHT = 165
+    CARD_RADIUS = 4.5
     BAR_X = 25
     BAR_Y = 54
     BAR_WIDTH = 290
@@ -41,13 +48,13 @@ class LanguagesCardRenderer:
         self.custom_title = custom_title
 
         theme = themes.get(theme_name, themes["default"])
-        self.title_color = format_color(title_color_override or theme.get("title_color", "2f80ed"))
-        self.text_color = format_color(text_color_override or theme.get("text_color", "333333"))
+        self.title_color = format_color(sanitize_color(title_color_override) or theme.get("title_color", "2f80ed"))
+        self.text_color = format_color(sanitize_color(text_color_override) or theme.get("text_color", "333333"))
 
-        raw_bg = bg_color_override or theme.get("bg_color", "fffefe")
+        raw_bg = sanitize_background(bg_color_override) or theme.get("bg_color", "fffefe")
         self.bg_defs, self.bg_fill = parse_background(raw_bg)
 
-        raw_border = border_color_override or theme.get("border_color")
+        raw_border = sanitize_color(border_color_override) or theme.get("border_color")
         self.border_color = format_color(raw_border) if raw_border else self.text_color
 
     def _render_progress_bar(self) -> str:
@@ -125,7 +132,7 @@ class LanguagesCardRenderer:
             .header {{ font: bold 16px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.title_color}; }}
         </style>
         
-        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="6" fill="{self.bg_fill}" stroke="{self.border_color}"/>
+        <rect width="{self.CARD_WIDTH - 1}" height="{self.CARD_HEIGHT - 1}" x="0.5" y="0.5" rx="{self.CARD_RADIUS}" fill="{self.bg_fill}" stroke="{self.border_color}"/>
         
         <text x="25" y="34" class="header">{card_title}</text>
         
