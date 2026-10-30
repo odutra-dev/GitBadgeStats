@@ -31,7 +31,7 @@ class GitHubGraphQLClient:
     @property
     def headers(self) -> dict:
         """Retrieve and validate authorization headers."""
-        token = self._token
+        token = self._token or getenv("GITHUB_TOKEN")
 
         if not token or not token.strip():
             raise HTTPException(
