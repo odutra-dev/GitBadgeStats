@@ -70,7 +70,7 @@ Or in HTML:
 | `username`     | `string`  | **Required** | GitHub username                                                                       |
 | `theme`        | `string`  | `default`    | Visual theme name (over 70 themes available)                                          |
 | `timezone`     | `string`  | `UTC`        | Timezone for accurate day calculation (e.g., `America/Sao_Paulo`, `America/New_York`) |
-| `locale`       | `string`  | `en`         | Display language (`en` for English, `pt` for Portuguese)                              |
+| `locale`       | `string`  | `en`         | Display language (`en`, `pt`, `es`, `fr`, `de`)                                       |
 | `hide_days`    | `boolean` | `false`      | When `true`, hides the 7-day weekly tracker for a compact card                        |
 | `title_color`  | `string`  | -            | Custom hex color for titles (without `#`, e.g., `ff5555`)                             |
 | `text_color`   | `string`  | -            | Custom hex color for labels and body text                                             |
@@ -108,6 +108,7 @@ Or using the standard `/api` route:
 | :------------- | :-------- | :----------- | :------------------------------------------------- |
 | `username`     | `string`  | **Required** | GitHub username                                    |
 | `theme`        | `string`  | `default`    | Visual theme name                                  |
+| `locale`       | `string`  | `en`         | Display language (`en`, `pt`, `es`, `fr`, `de`)    |
 | `hide_rank`    | `boolean` | `false`      | When `true`, hides the circular dynamic rank gauge |
 | `title_color`  | `string`  | -            | Custom hex color for card title                    |
 | `text_color`   | `string`  | -            | Custom hex color for stats text                    |
@@ -166,17 +167,17 @@ A business-card summary of your GitHub profile:
 
 ### Profile Card Query Parameters
 
-| Parameter      | Type     | Default                   | Description                                     |
-| :------------- | :------- | :------------------------ | :---------------------------------------------- |
-| `username`     | `string` | **Required**              | GitHub username                                 |
-| `theme`        | `string` | `default`                 | Visual theme name                               |
-| `locale`       | `string` | `en`                      | Language of labels and account age (`en`, `pt`) |
-| `card_title`   | `string` | `{name}'s GitHub Profile` | Custom title for the card                       |
-| `title_color`  | `string` | -                         | Custom hex color for card title                 |
-| `text_color`   | `string` | -                         | Custom hex color for labels and values          |
-| `icon_color`   | `string` | -                         | Custom hex color for icons                      |
-| `bg_color`     | `string` | -                         | Custom hex color or gradient for background     |
-| `border_color` | `string` | -                         | Custom hex color for card border                |
+| Parameter      | Type     | Default                   | Description                                                      |
+| :------------- | :------- | :------------------------ | :--------------------------------------------------------------- |
+| `username`     | `string` | **Required**              | GitHub username                                                  |
+| `theme`        | `string` | `default`                 | Visual theme name                                                |
+| `locale`       | `string` | `en`                      | Language of labels and account age (`en`, `pt`, `es`, `fr`, `de`) |
+| `card_title`   | `string` | `{name}'s GitHub Profile` | Custom title for the card                                        |
+| `title_color`  | `string` | -                         | Custom hex color for card title                                  |
+| `text_color`   | `string` | -                         | Custom hex color for labels and values                           |
+| `icon_color`   | `string` | -                         | Custom hex color for icons                                       |
+| `bg_color`     | `string` | -                         | Custom hex color or gradient for background                      |
+| `border_color` | `string` | -                         | Custom hex color for card border                                 |
 
 ---
 
@@ -186,6 +187,7 @@ A business-card summary of your GitHub profile:
 | :------------- | :------- | :-------------------- | :----------------------------------------------------------------------- |
 | `username`     | `string` | **Required**          | GitHub username                                                          |
 | `theme`        | `string` | `default`             | Visual theme name                                                        |
+| `locale`       | `string` | `en`                  | Display language (`en`, `pt`, `es`, `fr`, `de`)                          |
 | `hide`         | `string` | -                     | Comma-separated languages to exclude (e.g., `html,css,jupyter notebook`) |
 | `exclude_repo` | `string` | -                     | Comma-separated repository names to ignore                               |
 | `card_title`   | `string` | `Most Used Languages` | Custom title for the card                                                |
