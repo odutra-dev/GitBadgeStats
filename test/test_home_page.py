@@ -100,10 +100,12 @@ def test_home_page_form_inputs_and_validation():
     assert 'id="btn-reset-form"' in html
 
     # Specific card inputs
+    assert 'id="select-stats-locale"' in html
     assert 'id="input-hide-rank"' in html
     assert 'id="select-locale"' in html
     assert 'id="input-timezone"' in html
     assert 'id="input-hide-days"' in html
+    assert 'id="select-langs-locale"' in html
     assert 'id="input-card-title"' in html
     assert 'id="input-hide-langs"' in html
     assert 'id="input-exclude-repos"' in html

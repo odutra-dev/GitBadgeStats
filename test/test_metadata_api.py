@@ -28,6 +28,7 @@ def test_get_locales():
     data = response.json()
     assert "locales" in data
     assert isinstance(data["locales"], list)
+    assert set(data["locales"]) == {"en", "pt", "es", "fr", "de"}
     assert set(data["locales"]) == set(SUPPORTED_LOCALES)
 
 

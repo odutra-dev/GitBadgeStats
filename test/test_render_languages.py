@@ -67,3 +67,28 @@ def test_generate_languages_svg_custom_colors():
     assert "C# &amp; C++" in svg
     assert "#ff0000" in svg
     assert "#00ff00" in svg
+
+
+def test_generate_languages_svg_locales():
+    """Verify Top Languages card localized titles and empty texts."""
+    import pytest
+    expected = {
+        "pt": ("Linguagens Mais Usadas", "Nenhuma linguagem encontrada"),
+        "es": ("Lenguajes Más Usados", "No se encontraron lenguajes"),
+        "fr": ("Langages les Plus Utilisés", "Aucun langage trouvé"),
+        "de": ("Meistgenutzte Sprachen", "Keine Sprachen gefunden"),
+    }
+    for locale, (title, empty_msg) in expected.items():
+        # Title test with languages
+        svg_with_langs = generate_languages_svg(
+            {"name": "User", "languages": [{"name": "Python", "color": "#3572A5", "percent": 100.0}]},
+            locale=locale,
+        )
+        assert title in svg_with_langs
+
+        # Empty state test
+        svg_empty = generate_languages_svg({"name": "User", "languages": []}, locale=locale)
+        assert empty_msg in svg_empty
+
+    with pytest.raises(ValueError, match="Unsupported locale 'it'"):
+        generate_languages_svg({"name": "User", "languages": []}, locale="it")

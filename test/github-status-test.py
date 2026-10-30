@@ -304,3 +304,31 @@ def test_get_profile_no_username() -> None:
 
     assert response.status_code == 422
     assert response.headers["Content-Type"] == "application/json"
+
+
+def test_get_repo_stats_locale() -> None:
+    response = client.get("/api/stats?username=octocat&locale=pt")
+    assert response.status_code == 200
+    assert "Estatísticas do GitHub de The Octocat" in response.text
+    assert "Total de commits:" in response.text
+    assert "Rank GitHub" in response.text
+
+
+def test_get_repo_stats_invalid_locale() -> None:
+    response = client.get("/api/stats?username=octocat&locale=invalid")
+    assert response.status_code == 200  # Returns error SVG
+    assert "image/svg+xml" in response.headers["Content-Type"]
+    assert "Could not load GitHub data" in response.text
+
+
+def test_get_top_languages_locale() -> None:
+    response = client.get("/api/top-langs?username=octocat&locale=pt")
+    assert response.status_code == 200
+    assert "Linguagens Mais Usadas" in response.text
+
+
+def test_get_top_languages_invalid_locale() -> None:
+    response = client.get("/api/top-langs?username=octocat&locale=invalid")
+    assert response.status_code == 200  # Returns error SVG
+    assert "image/svg+xml" in response.headers["Content-Type"]
+    assert "Could not load GitHub data" in response.text
