@@ -20,6 +20,7 @@ from src.common.utils import (
     sanitize_background,
     sanitize_color,
 )
+from src.domain.achievements import ACHIEVEMENT_DEFINITIONS
 
 
 class AchievementsCardRenderer:
@@ -36,6 +37,7 @@ class AchievementsCardRenderer:
         theme_name: str = "default",
         locale: str = "en",
         show_locked: bool = True,
+        show_progress: bool = False,
         hide: Optional[str] = None,
         title_color_override: Optional[str] = None,
         text_color_override: Optional[str] = None,
@@ -48,6 +50,7 @@ class AchievementsCardRenderer:
         self.locale = locale
         self.translations = get_achievements_translations(locale)
         self.show_locked = show_locked
+        self.show_progress = show_progress
         self.custom_title = custom_title
 
         # Parsed exclusion set
@@ -90,13 +93,13 @@ class AchievementsCardRenderer:
         self.total_unlocked = self.data.get("total_unlocked", 0)
         self.total_possible = self.data.get("total_possible", len(all_items))
 
-        # Dynamic height based on row count
+        # Dynamic height based on row count and show_progress
         if not self.items:
             self.card_height = 140
         elif len(self.items) <= 4:
-            self.card_height = 150
+            self.card_height = 185 if self.show_progress else 150
         else:
-            self.card_height = 230
+            self.card_height = 275 if self.show_progress else 230
 
     @staticmethod
     def _truncate(text: str, limit: int) -> str:
@@ -177,6 +180,39 @@ class AchievementsCardRenderer:
 
         opacity = "1.0" if unlocked else "0.45"
 
+        progress_markup = ""
+        if self.show_progress:
+            defn = ACHIEVEMENT_DEFINITIONS.get(ach_id)
+            is_max = (tier == "gold") or (defn is not None and len(defn.tiers) == 1 and unlocked)
+            target_value = item.get("target_value", 1)
+            current_value = item.get("current_value", 0)
+            progress_pct = max(0.0, min(100.0, float(item.get("progress_percentage", 0.0))))
+            remaining = max(0, target_value - current_value)
+
+            bar_w = 48
+            bar_h = 3
+            bar_x = cx - bar_w / 2
+            bar_y = cy + 49
+            fill_w = round((progress_pct / 100.0) * bar_w, 1)
+
+            if is_max:
+                progress_label = self.translations.get("max_tier_label", "Max Tier")
+            elif remaining == 1:
+                progress_label = self.translations.get("remaining_single", "1 left")
+            else:
+                progress_label = self.translations.get("remaining_multiple", "{count} left").format(count=remaining)
+
+            escaped_progress_label = escape_text(progress_label)
+            bar_color = tier_style["border"] if unlocked else "#484f58"
+
+            progress_markup = f"""
+            <rect x="{bar_x}" y="{bar_y}" width="{bar_w}" height="{bar_h}" rx="1.5" fill="{self.text_color}" fill-opacity="0.15"/>
+            <rect x="{bar_x}" y="{bar_y}" width="{fill_w}" height="{bar_h}" rx="1.5" fill="{bar_color}"/>
+            <text x="{cx}" y="{bar_y + 10.5}" text-anchor="middle" class="progress-text">{escaped_progress_label}</text>
+            """
+
+        name_y = cy + 40 if self.show_progress else cy + 43
+
         return f"""
         <g class="achievement-item" opacity="{opacity}">
             <defs>
@@ -191,7 +227,8 @@ class AchievementsCardRenderer:
                 <rect width="42" height="15" rx="7.5" fill="{tier_style['badge_bg']}" stroke="{tier_style['border']}" stroke-width="0.8"/>
                 <text x="21" y="11" text-anchor="middle" class="tier-pill" fill="{tier_text_color}">{escaped_tier_text}</text>
             </g>
-            <text x="{cx}" y="{cy + 43}" text-anchor="middle" class="ach-name">{escaped_name}</text>
+            <text x="{cx}" y="{name_y}" text-anchor="middle" class="ach-name">{escaped_name}</text>
+            {progress_markup}
         </g>
         """
 
@@ -216,15 +253,15 @@ class AchievementsCardRenderer:
         if n <= 4:
             # Single row layout
             col_width = (self.CARD_WIDTH - 40) / n
-            cy = 82
+            cy = 72 if self.show_progress else 82
             for i, item in enumerate(self.items):
                 cx = 20 + col_width * (i + 0.5)
                 cells.append(self._render_achievement_item(item, cx, cy))
         else:
             # 2 rows layout: 4 in row 1, rest in row 2 centered
             col_width = (self.CARD_WIDTH - 40) / 4
-            cy1 = 76
-            cy2 = 160
+            cy1 = 66 if self.show_progress else 76
+            cy2 = 166 if self.show_progress else 160
 
             # Row 1 (first 4 items)
             for i in range(4):
@@ -246,6 +283,18 @@ class AchievementsCardRenderer:
         header = self._render_header()
         grid = self._render_grid()
 
+        disclaimer = ""
+        if self.show_progress:
+            disclaimer_text = escape_text(
+                self.translations.get(
+                    "estimate_disclaimer",
+                    "* Progress is an estimate based on public GitHub activity.",
+                )
+            )
+            disclaimer = f"""
+        <text x="25" y="{self.card_height - 12}" class="disclaimer-text">{disclaimer_text}</text>
+        """
+
         return f"""<svg width="{self.CARD_WIDTH}" height="{self.card_height}" viewBox="0 0 {self.CARD_WIDTH} {self.card_height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{title}">
         <title>{title}</title>
         <defs>
@@ -256,6 +305,8 @@ class AchievementsCardRenderer:
             .pill-text {{ font: bold 9.5px 'Segoe UI', Ubuntu, Sans-Serif; letter-spacing: 0.5px; }}
             .ach-name {{ font: 600 11px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.text_color}; }}
             .tier-pill {{ font: bold 9px 'Segoe UI', Ubuntu, Sans-Serif; letter-spacing: 0.3px; }}
+            .progress-text {{ font: 600 8.5px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.text_color}; opacity: 0.85; }}
+            .disclaimer-text {{ font: 400 9px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.text_color}; opacity: 0.6; }}
             .empty-text {{ font: 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: {self.text_color}; opacity: 0.7; }}
         </style>
 
@@ -263,6 +314,7 @@ class AchievementsCardRenderer:
 
         {header}
         {grid}
+        {disclaimer}
     </svg>"""
 
 
@@ -271,6 +323,7 @@ def generate_achievements_svg(
     theme_name: str = "default",
     locale: str = "en",
     show_locked: bool = True,
+    show_progress: bool = False,
     hide: Optional[str] = None,
     title_color_override: Optional[str] = None,
     text_color_override: Optional[str] = None,
@@ -285,6 +338,7 @@ def generate_achievements_svg(
         theme_name=theme_name,
         locale=locale,
         show_locked=show_locked,
+        show_progress=show_progress,
         hide=hide,
         title_color_override=title_color_override,
         text_color_override=text_color_override,
