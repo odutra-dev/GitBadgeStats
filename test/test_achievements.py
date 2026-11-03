@@ -327,6 +327,30 @@ def test_generate_achievements_svg_custom_colors_and_title(sample_achievements_d
     assert "#000000" in svg
 
 
+def test_generate_achievements_svg_show_progress(sample_achievements_data: dict) -> None:
+    # Default show_progress=False: no disclaimer, no progress elements
+    svg_default = generate_achievements_svg(sample_achievements_data, show_progress=False, locale="en")
+    assert 'class="progress-text"' not in svg_default
+    assert 'class="disclaimer-text"' not in svg_default
+    assert 'height="230"' in svg_default
+
+    # show_progress=True: progress bar, remaining/max labels, disclaimer note
+    svg_progress = generate_achievements_svg(sample_achievements_data, show_progress=True, locale="en")
+    assert 'class="progress-text"' in svg_progress
+    assert 'class="disclaimer-text"' in svg_progress
+    assert "* Progress is an estimate based on public GitHub activity." in svg_progress
+    assert 'height="275"' in svg_progress
+    assert "Max Tier" in svg_progress or "left" in svg_progress
+
+    # Portuguese locale
+    svg_pt = generate_achievements_svg(sample_achievements_data, show_progress=True, locale="pt")
+    assert "* Progresso estimado com base em atividades públicas do GitHub." in svg_pt
+
+    # Single row height when locked items hidden
+    svg_1row = generate_achievements_svg(sample_achievements_data, show_progress=True, show_locked=False)
+    assert 'height="185"' in svg_1row
+
+
 # ---------------------------------------------------------------------------
 # API Routes Tests
 # ---------------------------------------------------------------------------
@@ -363,3 +387,9 @@ def test_api_achievements_endpoint_success(mock_fetch: AsyncMock, sample_achieve
     assert resp2.status_code == 200
     assert "image/svg+xml" in resp2.headers["content-type"]
     assert "Conquistas de Dutra Dev" in resp2.text
+
+    # Test show_progress=true
+    resp3 = client.get("/api/conquistas?username=dutra&show_progress=true&locale=pt")
+    assert resp3.status_code == 200
+    assert "Progresso estimado" in resp3.text
+    assert "progress-text" in resp3.text
