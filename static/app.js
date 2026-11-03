@@ -13,6 +13,7 @@
     streak: "/api/streak",
     languages: "/api/top-langs",
     profile: '/api/profile',
+    achievements: '/api/achievements',
   };
 
   const CARD_TITLES = {
@@ -20,6 +21,7 @@
     streak: "GitHub Streak",
     languages: "Top Languages",
     profile: 'GitHub Profile',
+    achievements: 'GitHub Achievements',
   };
 
   const CARD_ENDPOINTS = {
@@ -27,6 +29,7 @@
     streak: "GET /api/streak",
     languages: "GET /api/top-langs",
     profile: 'GET /api/profile',
+    achievements: 'GET /api/achievements',
   };
 
   // State
@@ -72,6 +75,9 @@
   const sectionProfileOptions = document.getElementById(
     "section-profile-options",
   );
+  const sectionAchievementsOptions = document.getElementById(
+    "section-achievements-options",
+  );
   const rowIconColor = document.getElementById("row-icon-color");
 
   // Stats inputs
@@ -92,6 +98,18 @@
   // Profile inputs
   const selectProfileLocale = document.getElementById("select-profile-locale");
   const inputProfileTitle = document.getElementById("input-profile-title");
+
+  // Achievements inputs
+  const selectAchievementsLocale = document.getElementById(
+    "select-achievements-locale",
+  );
+  const inputAchievementsTitle = document.getElementById(
+    "input-achievements-title",
+  );
+  const inputShowLocked = document.getElementById("input-show-locked");
+  const inputHideAchievements = document.getElementById(
+    "input-hide-achievements",
+  );
 
   // Colors accordion & inputs
   const btnToggleColors = document.getElementById("btn-toggle-colors");
@@ -276,6 +294,28 @@
 
       if (profileTitle) {
         params.set('card_title', profileTitle);
+      }
+    } else if (activeCard === "achievements") {
+      const achLocale = selectAchievementsLocale.value;
+
+      if (achLocale && achLocale !== "en") {
+        params.set("locale", achLocale);
+      }
+
+      const achTitle = inputAchievementsTitle.value.trim();
+
+      if (achTitle) {
+        params.set("card_title", achTitle);
+      }
+
+      if (!inputShowLocked.checked) {
+        params.set("show_locked", "false");
+      }
+
+      const hideAch = inputHideAchievements.value.trim();
+
+      if (hideAch) {
+        params.set("hide", hideAch);
       }
     }
 
@@ -473,6 +513,10 @@
       cardType !== "languages",
     );
     sectionProfileOptions.classList.toggle('hidden', cardType !== 'profile');
+    sectionAchievementsOptions.classList.toggle(
+      "hidden",
+      cardType !== "achievements",
+    );
 
     // icon_color visibility
     if (cardType === "languages") {
@@ -603,6 +647,12 @@
     selectProfileLocale.value = 'en';
     inputProfileTitle.value = '';
 
+    // Achievements
+    if (selectAchievementsLocale) selectAchievementsLocale.value = 'en';
+    if (inputAchievementsTitle) inputAchievementsTitle.value = '';
+    if (inputShowLocked) inputShowLocked.checked = true;
+    if (inputHideAchievements) inputHideAchievements.value = '';
+
     // Colors
     inputTitleColor.value = "";
     inputTextColor.value = "";
@@ -676,15 +726,27 @@
     selectLangsLocale.addEventListener("change", handleImmediateChange);
   }
   selectProfileLocale.addEventListener('change', handleImmediateChange);
+  if (selectAchievementsLocale) {
+    selectAchievementsLocale.addEventListener("change", handleImmediateChange);
+  }
 
   inputHideRank.addEventListener("change", handleImmediateChange);
   inputHideDays.addEventListener("change", handleImmediateChange);
+  if (inputShowLocked) {
+    inputShowLocked.addEventListener("change", handleImmediateChange);
+  }
 
   inputTimezone.addEventListener("input", handleInputDebounced);
   inputCardTitle.addEventListener("input", handleInputDebounced);
   inputHideLangs.addEventListener("input", handleInputDebounced);
   inputExcludeRepos.addEventListener("input", handleInputDebounced);
   inputProfileTitle.addEventListener('input', handleInputDebounced);
+  if (inputAchievementsTitle) {
+    inputAchievementsTitle.addEventListener("input", handleInputDebounced);
+  }
+  if (inputHideAchievements) {
+    inputHideAchievements.addEventListener("input", handleInputDebounced);
+  }
 
   // Bind color pairs
   bindColorPair(pickerTitleColor, inputTitleColor);
