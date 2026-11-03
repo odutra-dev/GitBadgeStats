@@ -118,6 +118,7 @@ def test_home_page_form_inputs_and_validation():
     assert 'id="select-achievements-locale"' in html
     assert 'id="input-achievements-title"' in html
     assert 'id="input-show-locked"' in html
+    assert 'id="input-show-progress"' in html
     assert 'id="input-hide-achievements"' in html
 
 

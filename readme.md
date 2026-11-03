@@ -227,19 +227,20 @@ Or using the Portuguese alias `/api/conquistas`:
 
 ### Achievements Card Query Parameters
 
-| Parameter      | Type      | Default                        | Description                                                                 |
-| :------------- | :-------- | :----------------------------- | :-------------------------------------------------------------------------- |
-| `username`     | `string`  | **Required**                   | GitHub username                                                             |
-| `theme`        | `string`  | `default`                      | Visual theme name                                                           |
-| `locale`       | `string`  | `en`                           | Language of labels (`en`, `pt`, `es`, `fr`, `de`)                           |
-| `show_locked`  | `boolean` | `true`                         | When `false`, hides unearned badges for an ultra-compact single-row card     |
-| `hide`         | `string`  | -                              | Comma-separated badge IDs to exclude (e.g., `yolo,public-sponsor`)           |
-| `card_title`   | `string`  | `{name}'s GitHub Achievements` | Custom title for the card                                                   |
-| `title_color`  | `string`  | -                              | Custom hex color for card title                                             |
-| `text_color`   | `string`  | -                              | Custom hex color for labels and badge names                                 |
-| `icon_color`   | `string`  | -                              | Custom hex color for trophy icon and status pill                            |
-| `bg_color`     | `string`  | -                              | Custom hex color or gradient for background                                 |
-| `border_color` | `string`  | -                              | Custom hex color for card border                                            |
+| Parameter       | Type      | Default                        | Description                                                                 |
+| :-------------- | :-------- | :----------------------------- | :-------------------------------------------------------------------------- |
+| `username`      | `string`  | **Required**                   | GitHub username                                                             |
+| `theme`         | `string`  | `default`                      | Visual theme name                                                           |
+| `locale`        | `string`  | `en`                           | Language of labels (`en`, `pt`, `es`, `fr`, `de`)                           |
+| `show_locked`   | `boolean` | `true`                         | When `false`, hides unearned badges for an ultra-compact single-row card     |
+| `show_progress` | `boolean` | `false`                        | When `true`, displays progress bars, remaining counts to next tier, and estimate note |
+| `hide`          | `string`  | -                              | Comma-separated badge IDs to exclude (e.g., `yolo,public-sponsor`)           |
+| `card_title`    | `string`  | `{name}'s GitHub Achievements` | Custom title for the card                                                   |
+| `title_color`   | `string`  | -                              | Custom hex color for card title                                             |
+| `text_color`    | `string`  | -                              | Custom hex color for labels and badge names                                 |
+| `icon_color`    | `string`  | -                              | Custom hex color for trophy icon and status pill                            |
+| `bg_color`      | `string`  | -                              | Custom hex color or gradient for background                                 |
+| `border_color`  | `string`  | -                              | Custom hex color for card border                                            |
 
 ---
 

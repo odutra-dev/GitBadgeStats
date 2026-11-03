@@ -107,6 +107,7 @@
     "input-achievements-title",
   );
   const inputShowLocked = document.getElementById("input-show-locked");
+  const inputShowProgress = document.getElementById("input-show-progress");
   const inputHideAchievements = document.getElementById(
     "input-hide-achievements",
   );
@@ -310,6 +311,10 @@
 
       if (!inputShowLocked.checked) {
         params.set("show_locked", "false");
+      }
+
+      if (inputShowProgress && inputShowProgress.checked) {
+        params.set("show_progress", "true");
       }
 
       const hideAch = inputHideAchievements.value.trim();
@@ -651,6 +656,7 @@
     if (selectAchievementsLocale) selectAchievementsLocale.value = 'en';
     if (inputAchievementsTitle) inputAchievementsTitle.value = '';
     if (inputShowLocked) inputShowLocked.checked = true;
+    if (inputShowProgress) inputShowProgress.checked = false;
     if (inputHideAchievements) inputHideAchievements.value = '';
 
     // Colors
@@ -734,6 +740,9 @@
   inputHideDays.addEventListener("change", handleImmediateChange);
   if (inputShowLocked) {
     inputShowLocked.addEventListener("change", handleImmediateChange);
+  }
+  if (inputShowProgress) {
+    inputShowProgress.addEventListener("change", handleImmediateChange);
   }
 
   inputTimezone.addEventListener("input", handleInputDebounced);
