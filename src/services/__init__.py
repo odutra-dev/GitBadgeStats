@@ -6,6 +6,7 @@ from src.services.github_service import (
     fetch_github_stats,
     fetch_github_streak,
     fetch_github_top_languages,
+    fetch_github_achievements,
 )
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "fetch_github_stats",
     "fetch_github_streak",
     "fetch_github_top_languages",
+    "fetch_github_achievements",
 ]
