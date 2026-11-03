@@ -16,10 +16,12 @@ from src.common.themes import themes
 from src.common.locales import SUPPORTED_LOCALES
 from src.renderers.languages_card import generate_languages_svg
 from src.renderers.profile_card import generate_profile_svg
+from src.renderers.achievements_card import generate_achievements_svg
 from src.renderers.stats_card import generate_svg
 from src.renderers.streak_card import generate_streak_svg
 from src.services.error_cards import build_error_card
 from src.services.github_service import (
+    fetch_github_achievements,
     fetch_github_profile,
     fetch_github_stats,
     fetch_github_streak,
@@ -90,6 +92,8 @@ BADGE_PATHS = frozenset({
     "/api/top-langs",
     "/api/languages",
     "/api/profile",
+    "/api/achievements",
+    "/api/conquistas",
 })
 
 
@@ -292,3 +296,42 @@ async def get_profile(
     )
 
     return Response(content=svg_content, media_type="image/svg+xml", headers=CACHE_HEADERS)
+
+
+@app.get("/api/achievements")
+@app.get("/api/conquistas")
+async def get_achievements(
+    username: str,
+    theme: str = "default",
+    locale: str = "en",
+    show_locked: bool = True,
+    hide: Optional[str] = None,
+    title_color: Optional[str] = None,
+    text_color: Optional[str] = None,
+    icon_color: Optional[str] = None,
+    bg_color: Optional[str] = None,
+    border_color: Optional[str] = None,
+    card_title: Optional[str] = None,
+):
+    """Generate dynamic SVG badge displaying user's GitHub achievements and tiers."""
+    _validate_theme(theme)
+    _validate_locale(locale)
+
+    achievements_data: dict[Any, Any] = await fetch_github_achievements(username)
+
+    svg_content: str = generate_achievements_svg(
+        achievements_data,
+        theme_name=theme,
+        locale=locale,
+        show_locked=show_locked,
+        hide=hide,
+        title_color_override=title_color,
+        text_color_override=text_color,
+        icon_color_override=icon_color,
+        bg_color_override=bg_color,
+        border_color_override=border_color,
+        custom_title=card_title,
+    )
+
+    return Response(content=svg_content, media_type="image/svg+xml", headers=CACHE_HEADERS)
+
