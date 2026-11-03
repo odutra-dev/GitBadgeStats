@@ -309,3 +309,151 @@ def get_languages_translations(locale: str) -> LanguagesTranslations:
         raise ValueError(
             f"Unsupported locale '{locale}'. Supported locales: {supported}"
         ) from exc
+
+
+class AchievementsTranslations(TypedDict):
+    """Translation keys required by the achievements card."""
+
+    card_title: str
+    unlocked_label: str
+    locked_label: str
+    tier_default: str
+    tier_bronze: str
+    tier_silver: str
+    tier_gold: str
+    achievements: dict[str, str]
+    empty_text: str
+    max_tier_label: str
+    remaining_single: str
+    remaining_multiple: str
+    estimate_disclaimer: str
+
+
+ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
+    "en": {
+        "card_title": "{name}'s Achievements",
+        "unlocked_label": "Unlocked",
+        "locked_label": "Locked",
+        "tier_default": "Default",
+        "tier_bronze": "Bronze",
+        "tier_silver": "Silver",
+        "tier_gold": "Gold",
+        "achievements": {
+            "pull-shark": "Pull Shark",
+            "starstruck": "Starstruck",
+            "galaxy-brain": "Galaxy Brain",
+            "pair-extraordinaire": "Pair Extraordinaire",
+            "quickdraw": "Quickdraw",
+            "yolo": "YOLO",
+            "public-sponsor": "Public Sponsor",
+        },
+        "empty_text": "No achievements unlocked yet",
+        "max_tier_label": "Max Tier",
+        "remaining_single": "1 left",
+        "remaining_multiple": "{count} left",
+        "estimate_disclaimer": "* Progress is an estimate based on public GitHub activity.",
+    },
+    "pt": {
+        "card_title": "Conquistas de {name}",
+        "unlocked_label": "Desbloqueadas",
+        "locked_label": "Bloqueadas",
+        "tier_default": "Padrão",
+        "tier_bronze": "Bronze",
+        "tier_silver": "Prata",
+        "tier_gold": "Ouro",
+        "achievements": {
+            "pull-shark": "Pull Shark",
+            "starstruck": "Starstruck",
+            "galaxy-brain": "Galaxy Brain",
+            "pair-extraordinaire": "Pair Extraordinaire",
+            "quickdraw": "Quickdraw",
+            "yolo": "YOLO",
+            "public-sponsor": "Apoiador Público",
+        },
+        "empty_text": "Nenhuma conquista desbloqueada ainda",
+        "max_tier_label": "Nível Máx.",
+        "remaining_single": "Falta 1",
+        "remaining_multiple": "Faltam {count}",
+        "estimate_disclaimer": "* Progresso estimado com base em atividades públicas do GitHub.",
+    },
+    "es": {
+        "card_title": "Logros de {name}",
+        "unlocked_label": "Desbloqueados",
+        "locked_label": "Bloqueados",
+        "tier_default": "Por defecto",
+        "tier_bronze": "Bronce",
+        "tier_silver": "Plata",
+        "tier_gold": "Oro",
+        "achievements": {
+            "pull-shark": "Pull Shark",
+            "starstruck": "Starstruck",
+            "galaxy-brain": "Galaxy Brain",
+            "pair-extraordinaire": "Pair Extraordinaire",
+            "quickdraw": "Quickdraw",
+            "yolo": "YOLO",
+            "public-sponsor": "Patrocinador Público",
+        },
+        "empty_text": "No hay logros desbloqueados todavía",
+        "max_tier_label": "Nivel Máx.",
+        "remaining_single": "Falta 1",
+        "remaining_multiple": "Faltan {count}",
+        "estimate_disclaimer": "* Progreso estimado según la actividad pública de GitHub.",
+    },
+    "fr": {
+        "card_title": "Succès de {name}",
+        "unlocked_label": "Débloqués",
+        "locked_label": "Verrouillés",
+        "tier_default": "Par défaut",
+        "tier_bronze": "Bronze",
+        "tier_silver": "Argent",
+        "tier_gold": "Or",
+        "achievements": {
+            "pull-shark": "Pull Shark",
+            "starstruck": "Starstruck",
+            "galaxy-brain": "Galaxy Brain",
+            "pair-extraordinaire": "Pair Extraordinaire",
+            "quickdraw": "Quickdraw",
+            "yolo": "YOLO",
+            "public-sponsor": "Sponsor Public",
+        },
+        "empty_text": "Aucun succès débloqué pour le moment",
+        "max_tier_label": "Niveau Max.",
+        "remaining_single": "1 restant",
+        "remaining_multiple": "{count} restants",
+        "estimate_disclaimer": "* Progression estimée basée sur l'activité publique GitHub.",
+    },
+    "de": {
+        "card_title": "Erfolge von {name}",
+        "unlocked_label": "Freigeschaltet",
+        "locked_label": "Gesperrt",
+        "tier_default": "Standard",
+        "tier_bronze": "Bronze",
+        "tier_silver": "Silber",
+        "tier_gold": "Gold",
+        "achievements": {
+            "pull-shark": "Pull Shark",
+            "starstruck": "Starstruck",
+            "galaxy-brain": "Galaxy Brain",
+            "pair-extraordinaire": "Pair Extraordinaire",
+            "quickdraw": "Quickdraw",
+            "yolo": "YOLO",
+            "public-sponsor": "Öffentlicher Sponsor",
+        },
+        "empty_text": "Noch keine Erfolge freigeschaltet",
+        "max_tier_label": "Max. Stufe",
+        "remaining_single": "Noch 1",
+        "remaining_multiple": "Noch {count}",
+        "estimate_disclaimer": "* Geschätzter Fortschritt basierend auf öffentlichen GitHub-Aktivitäten.",
+    },
+}
+
+
+def get_achievements_translations(locale: str) -> AchievementsTranslations:
+    """Return achievements card translations for a supported locale."""
+    try:
+        return ACHIEVEMENTS_TRANSLATIONS[locale]
+    except KeyError as exc:
+        supported = ", ".join(ACHIEVEMENTS_TRANSLATIONS)
+        raise ValueError(
+            f"Unsupported locale '{locale}'. Supported locales: {supported}"
+        ) from exc

@@ -1,6 +1,6 @@
 <div align="center">
   <h1 style="font-size: 28px; margin: 10px 0;">Git Badge Stats</h1>
-  <p>Dynamically generated GitHub stats badges, Duolingo-style Streak Cards, and Top Languages for your profile READMEs!</p>
+  <p>Dynamically generated GitHub stats badges, Duolingo-style Streak Cards, Top Languages, Profile Summary, and GitHub Achievements for your profile READMEs!</p>
 </div>
 
 <p align="center">
@@ -198,6 +198,52 @@ A business-card summary of your GitHub profile:
 
 ---
 
+## 5. 🏆 GitHub Achievements Card
+
+Showcase your unlocked GitHub achievements and milestone tiers in a sleek, compact showcase card:
+
+- **Official Badge Emblems:** Displays official artwork for the 7 primary GitHub achievements (*Pull Shark*, *Starstruck*, *Galaxy Brain*, *Pair Extraordinaire*, *Quickdraw*, *YOLO*, and *Public Sponsor*).
+- **Tier Overlays & Multipliers:** Metallic tier rings and capsules indicating your level: Bronze (x2), Silver (x3), Gold (x4).
+- **Progress Tracking:** Accurately reflects your unlocked tiers and progress toward higher targets.
+- **Show / Hide Locked Badges:** Unlocked achievements shine bright while unearned badges appear tastefully dimmed, or can be completely omitted with `show_locked=false`.
+
+### Preview
+
+<p align="center">
+  <img src="https://git-badge-stats.vercel.app/api/achievements?username=odutra-dev&theme=tokyonight" alt="GitHub Achievements Preview" />
+</p>
+
+### Usage
+
+```markdown
+![GitHub Achievements](https://git-badge-stats.vercel.app/api/achievements?username=odutra-dev&theme=tokyonight)
+```
+
+Or using the Portuguese alias `/api/conquistas`:
+
+```markdown
+![Conquistas](https://git-badge-stats.vercel.app/api/conquistas?username=odutra-dev&theme=tokyonight&locale=pt)
+```
+
+### Achievements Card Query Parameters
+
+| Parameter       | Type      | Default                        | Description                                                                 |
+| :-------------- | :-------- | :----------------------------- | :-------------------------------------------------------------------------- |
+| `username`      | `string`  | **Required**                   | GitHub username                                                             |
+| `theme`         | `string`  | `default`                      | Visual theme name                                                           |
+| `locale`        | `string`  | `en`                           | Language of labels (`en`, `pt`, `es`, `fr`, `de`)                           |
+| `show_locked`   | `boolean` | `true`                         | When `false`, hides unearned badges for an ultra-compact single-row card     |
+| `show_progress` | `boolean` | `false`                        | When `true`, displays progress bars, remaining counts to next tier, and estimate note |
+| `hide`          | `string`  | -                              | Comma-separated badge IDs to exclude (e.g., `yolo,public-sponsor`)           |
+| `card_title`    | `string`  | `{name}'s GitHub Achievements` | Custom title for the card                                                   |
+| `title_color`   | `string`  | -                              | Custom hex color for card title                                             |
+| `text_color`    | `string`  | -                              | Custom hex color for labels and badge names                                 |
+| `icon_color`    | `string`  | -                              | Custom hex color for trophy icon and status pill                            |
+| `bg_color`      | `string`  | -                              | Custom hex color or gradient for background                                 |
+| `border_color`  | `string`  | -                              | Custom hex color for card border                                            |
+
+---
+
 ## 🧯 Error Cards
 
 Badges are embedded with `<img>` tags, so a JSON error would just show up as a broken image. When a badge request fails, the API returns a small SVG card instead, styled with the same `theme`, color parameters and `locale` as the badge:
@@ -281,4 +327,5 @@ pytest
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-Inspired by [Anurag Hazra's](https://github.com/anuraghazra) [github-readme-stats](https://github.com/anuraghazra/github-readme-stats).
+- Inspired by [Anurag Hazra's](https://github.com/anuraghazra) [github-readme-stats](https://github.com/anuraghazra/github-readme-stats).
+- Achievements tracking concept inspired by [JohnPaulZer's](https://github.com/JohnPaulZer) [github-achievement](https://github.com/JohnPaulZer/github-achievement).

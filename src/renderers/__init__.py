@@ -12,6 +12,12 @@ from src.renderers.languages_card import (
 )
 
 from src.renderers.error_card import ErrorCardRenderer, generate_error_svg
+from src.renderers.profile_card import ProfileCardRenderer, generate_profile_svg
+from src.renderers.achievements_card import (
+    AchievementsCardRenderer,
+    generate_achievements_svg,
+)
+
 __all__ = [
     "StatsCardRenderer",
     "generate_svg",
@@ -20,6 +26,10 @@ __all__ = [
     "render_flame_svg",
     "LanguagesCardRenderer",
     "generate_languages_svg",
+    "ProfileCardRenderer",
+    "generate_profile_svg",
+    "AchievementsCardRenderer",
+    "generate_achievements_svg",
     "ErrorCardRenderer",
     "generate_error_svg",
 ]

@@ -14,6 +14,7 @@ from src.services.cache import cache, CacheBackend
 from src.services.github_client import GitHubGraphQLClient, default_github_client
 from src.domain.streak import StreakCalculator, calculate_streak_from_days
 from src.domain.languages import LanguagesCalculator, calculate_top_languages
+from src.services.achievements_service import fetch_github_achievements
 
 
 # Helper functions

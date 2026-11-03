@@ -241,6 +241,33 @@
                   account age.
                 </p>
               </button>
+
+              <!-- Option 5: Achievements -->
+              <button
+                type="button"
+                data-card="achievements"
+                class="card-tab-btn text-left p-3.5 rounded-xl border transition-all duration-200 border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 shadow-sm sm:col-span-2"
+              >
+                <div class="flex items-center gap-2 mb-1.5">
+                  <svg
+                    class="w-4 h-4 text-amber-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold">GitHub Achievements</span>
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-snug">
+                  Showcase of unlocked badges, tier overlays (x2, x3, x4), and progress.
+                </p>
+              </button>
             </div>
           </div>
 
@@ -786,6 +813,100 @@
                       class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
                     />
                   </div>
+                </div>
+              </div>
+
+              <!-- 5. Achievements Card Specifics -->
+              <div
+                id="section-achievements-options"
+                class="space-y-4 pt-3 border-t border-zinc-800/80 hidden"
+              >
+                <span
+                  class="block text-[11px] font-semibold text-purple-400 uppercase tracking-wider"
+                  >Achievements Settings</span
+                >
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      for="select-achievements-locale"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Language (<code>locale</code>)</label
+                    >
+                    <select
+                      id="select-achievements-locale"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 outline-none transition cursor-pointer"
+                    >
+                      <option value="en">English (en)</option>
+                      <option value="pt">Portuguese (pt)</option>
+                      <option value="es">Spanish (es)</option>
+                      <option value="fr">French (fr)</option>
+                      <option value="de">German (de)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      for="input-achievements-title"
+                      class="block text-xs font-semibold text-zinc-200 mb-1"
+                      >Custom Title (<code>card_title</code>)</label
+                    >
+                    <input
+                      id="input-achievements-title"
+                      type="text"
+                      placeholder="Octocat's Achievements"
+                      class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                    />
+                  </div>
+                </div>
+                <label
+                  class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition"
+                >
+                  <div>
+                    <span class="text-xs font-semibold text-zinc-200 block"
+                      >Show Locked Achievements</span
+                    >
+                    <span class="text-[11px] text-zinc-400"
+                      >Displays unearned badges as dimmed/locked
+                      (<code>show_locked=true</code>)</span
+                    >
+                  </div>
+                  <input
+                    id="input-show-locked"
+                    type="checkbox"
+                    checked
+                    class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500"
+                  />
+                </label>
+                <label
+                  class="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700/80 cursor-pointer transition"
+                >
+                  <div>
+                    <span class="text-xs font-semibold text-zinc-200 block"
+                      >Show Progress & Metas</span
+                    >
+                    <span class="text-[11px] text-zinc-400"
+                      >Displays progress bars, remaining counts to next tier, and estimation note
+                      (<code>show_progress=true</code>)</span
+                    >
+                  </div>
+                  <input
+                    id="input-show-progress"
+                    type="checkbox"
+                    class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-purple-600 focus:ring-purple-500"
+                  />
+                </label>
+                <div>
+                  <label
+                    for="input-hide-achievements"
+                    class="block text-xs font-semibold text-zinc-200 mb-1"
+                    >Hide Badges (<code>hide</code>)</label
+                  >
+                  <input
+                    id="input-hide-achievements"
+                    type="text"
+                    placeholder="e.g. yolo,public-sponsor"
+                    class="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 focus:border-purple-500 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 outline-none transition"
+                  />
+                  <span class="text-[10px] text-zinc-500">Comma-separated achievement IDs</span>
                 </div>
               </div>
 

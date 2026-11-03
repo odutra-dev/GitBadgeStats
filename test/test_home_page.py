@@ -35,7 +35,7 @@ def test_home_page_document_structure():
 
 
 def test_home_page_card_selection_options():
-    """Validate that all 3 card options (stats, streak, languages) are present in the left panel."""
+    """Validate that all 5 card options (stats, streak, languages, profile, achievements) are present."""
     response = client.get("/")
     html = response.text
 
@@ -43,11 +43,15 @@ def test_home_page_card_selection_options():
     assert 'data-card="stats"' in html
     assert 'data-card="streak"' in html
     assert 'data-card="languages"' in html
+    assert 'data-card="profile"' in html
+    assert 'data-card="achievements"' in html
 
     # Titles and descriptions
     assert "GitHub Stats" in html
     assert "Commit Streak" in html
     assert "Top Languages" in html
+    assert "GitHub Profile" in html
+    assert "GitHub Achievements" in html
 
 
 def test_home_page_preview_canvas_components():
@@ -109,6 +113,13 @@ def test_home_page_form_inputs_and_validation():
     assert 'id="input-card-title"' in html
     assert 'id="input-hide-langs"' in html
     assert 'id="input-exclude-repos"' in html
+    assert 'id="select-profile-locale"' in html
+    assert 'id="input-profile-title"' in html
+    assert 'id="select-achievements-locale"' in html
+    assert 'id="input-achievements-title"' in html
+    assert 'id="input-show-locked"' in html
+    assert 'id="input-show-progress"' in html
+    assert 'id="input-hide-achievements"' in html
 
 
 def test_home_page_color_customizer_controls():
