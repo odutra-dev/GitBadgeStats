@@ -323,6 +323,10 @@ class AchievementsTranslations(TypedDict):
     tier_gold: str
     achievements: dict[str, str]
     empty_text: str
+    max_tier_label: str
+    remaining_single: str
+    remaining_multiple: str
+    estimate_disclaimer: str
 
 
 ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
@@ -344,6 +348,10 @@ ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
             "public-sponsor": "Public Sponsor",
         },
         "empty_text": "No achievements unlocked yet",
+        "max_tier_label": "Max Tier",
+        "remaining_single": "1 left",
+        "remaining_multiple": "{count} left",
+        "estimate_disclaimer": "* Progress is an estimate based on public GitHub activity.",
     },
     "pt": {
         "card_title": "Conquistas de {name}",
@@ -363,6 +371,10 @@ ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
             "public-sponsor": "Apoiador Público",
         },
         "empty_text": "Nenhuma conquista desbloqueada ainda",
+        "max_tier_label": "Nível Máx.",
+        "remaining_single": "Falta 1",
+        "remaining_multiple": "Faltam {count}",
+        "estimate_disclaimer": "* Progresso estimado com base em atividades públicas do GitHub.",
     },
     "es": {
         "card_title": "Logros de {name}",
@@ -382,6 +394,10 @@ ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
             "public-sponsor": "Patrocinador Público",
         },
         "empty_text": "No hay logros desbloqueados todavía",
+        "max_tier_label": "Nivel Máx.",
+        "remaining_single": "Falta 1",
+        "remaining_multiple": "Faltan {count}",
+        "estimate_disclaimer": "* Progreso estimado según la actividad pública de GitHub.",
     },
     "fr": {
         "card_title": "Succès de {name}",
@@ -401,6 +417,10 @@ ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
             "public-sponsor": "Sponsor Public",
         },
         "empty_text": "Aucun succès débloqué pour le moment",
+        "max_tier_label": "Niveau Max.",
+        "remaining_single": "1 restant",
+        "remaining_multiple": "{count} restants",
+        "estimate_disclaimer": "* Progression estimée basée sur l'activité publique GitHub.",
     },
     "de": {
         "card_title": "Erfolge von {name}",
@@ -420,6 +440,10 @@ ACHIEVEMENTS_TRANSLATIONS: dict[str, AchievementsTranslations] = {
             "public-sponsor": "Öffentlicher Sponsor",
         },
         "empty_text": "Noch keine Erfolge freigeschaltet",
+        "max_tier_label": "Max. Stufe",
+        "remaining_single": "Noch 1",
+        "remaining_multiple": "Noch {count}",
+        "estimate_disclaimer": "* Geschätzter Fortschritt basierend auf öffentlichen GitHub-Aktivitäten.",
     },
 }
 
